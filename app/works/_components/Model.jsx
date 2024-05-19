@@ -1,20 +1,27 @@
 import { useAspect, useTexture } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import { transform } from "framer-motion";
+import gsap from "gsap";
 import { useControls } from "leva";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import * as THREE from "three";
 import { fragment, vertex } from "./Shader";
 
-export default function Model({ scrollProgress }) {
+import { Flip } from "gsap/Flip";
+
+gsap.registerPlugin(Flip);
+
+export default function Model() {
+  const [isClicked, setIsClicked] = useState(false);
+  const timeSpeed = useRef(0.04); // Utilisation de useRef pour stocker timeSpeed
+  const amplitudeValue = useRef(0.25);
+
   const image = useRef();
   const texture = useTexture("/images/car.jpg");
   const { width, height } = texture.image;
   const { viewport } = useThree();
   const scale = useAspect(width, height, 0.3);
-
   const { amplitude, waveLength } = useControls({
-    amplitude: { value: 0.25, min: 0, max: 2, step: 0.1 },
+    amplitude: { value: amplitudeValue, min: 0, max: 2, step: 0.1 },
     waveLength: { value: 5, min: 0, max: 20, step: 0.5 },
   });
 
@@ -26,50 +33,58 @@ export default function Model({ scrollProgress }) {
     vUvScale: { value: new THREE.Vector2(0, 0) },
   });
 
-  /**
-   *
-   * !TODO Animation lors du scrollYProgress pour le useframe a faire évoluer avec une aniamtion Flip
-   *
-   */
+  const handleClick = () => {
+    setIsClicked(!isClicked);
+    const scaleMultiplier = !isClicked ? 2 : 1;
+    gsap.to(image.current.scale, {
+      x: scale[0] * scaleMultiplier,
+      y: scale[1] * scaleMultiplier,
+      ease: "power2.inOut",
+      duration: 1,
+    });
+
+    gsap.to(timeSpeed, {
+      current: 0.2, // Accélérer temporairement
+      duration: 1,
+      onComplete: () => {
+        gsap.to(timeSpeed, {
+          current: 0.04, // Revenir à la vitesse normale
+          duration: 1,
+        });
+      },
+    });
+
+    gsap.to(amplitudeValue, {
+      current: 1, // Accélérer temporairement
+      duration: 1,
+      onComplete: () => {
+        gsap.to(amplitudeValue, {
+          current: 0.25, // Revenir à la vitesse normale
+          duration: 1,
+        });
+      },
+    });
+  };
 
   useFrame(() => {
-    //scale image based on progress of the scroll
-    // const scaleX = transform(
-    //   scrollProgress.get(),
-    //   [0, 1],
-    //   [scale[0], viewport.width]
-    // );
-    // const scaleY = transform(
-    //   scrollProgress.get(),
-    //   [0, 1],
-    //   [scale[1], viewport.height]
-    // );
-    // image.current.scale.x = scaleX;
-    // image.current.scale.y = scaleY;
+    const scaleX = image.current.scale.x;
+    const scaleY = image.current.scale.y;
 
-    // //Adjust texture to new scale
-    // const scaleRatio = scaleX / scaleY;
-    // const aspectRatio = width / height;
-    // //scale texture inside shader
-    // image.current.material.uniforms.vUvScale.value.set(
-    //   1,
-    //   aspectRatio / scaleRatio
-    // );
-
-    // animate wave based on progress of the scroll
-    const modifiedAmplitude = transform(
-      scrollProgress.get(),
-      [0, 1],
-      [amplitude, 0]
+    // Adjust texture to new scale
+    const scaleRatio = scaleX / scaleY;
+    const aspectRatio = width / height;
+    image.current.material.uniforms.vUvScale.value.set(
+      1,
+      aspectRatio / scaleRatio
     );
 
-    image.current.material.uniforms.uTime.value += 0.04;
-    image.current.material.uniforms.uAmplitude.value = modifiedAmplitude;
+    image.current.material.uniforms.uTime.value += timeSpeed.current;
+    image.current.material.uniforms.uAmplitude.value = amplitudeValue.current;
     image.current.material.uniforms.uWaveLength.value = waveLength;
   });
 
   return (
-    <mesh ref={image} scale={[scale[0] * 1.5, scale[1], 1]}>
+    <mesh onClick={handleClick} ref={image} scale={scale}>
       <planeGeometry args={[1, 1, 15, 15]} />
       <shaderMaterial
         wireframe={false}

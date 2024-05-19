@@ -5,17 +5,15 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import dynamic from "next/dynamic";
 import { useLayoutEffect, useRef } from "react";
 
-import { useScroll } from "framer-motion";
+gsap.registerPlugin(ScrollTrigger);
 
 const Scene = dynamic(() => import("../works/_components/Scene"), {
   ssr: false,
 });
 
-gsap.registerPlugin(ScrollTrigger);
-
 /**
  *
- * !TODO: Gérer le pin qui remonte à la fin de l'animation + Ajout d'images
+ * !TODO: Gérer le pin qui remonte à la fin de l'animation
  *
  */
 
@@ -52,11 +50,6 @@ export default function Works() {
     return () => ctx.revert();
   }, []);
 
-  const { scrollXProgress } = useScroll({
-    target: scrollContainer,
-    offset: ["start start", "end end"],
-  });
-
   return (
     <main>
       <div
@@ -64,7 +57,7 @@ export default function Works() {
         className="
         flex items-center h-[100vh] w-[200vw] "
       >
-        <Scene scrollProgress={scrollXProgress} />
+        <Scene scrollContainer={scrollContainer} />
       </div>
     </main>
   );
