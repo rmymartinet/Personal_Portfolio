@@ -11,8 +11,10 @@ gsap.registerPlugin(Flip);
  * !TODO Réaliser l'animation de flip il faut qu'il soit toujours centrer dans le viewport
  */
 
-export default function Scene({ flipRef }) {
-  const canvaRef = [useRef(), useRef(), useRef()];
+export default function Scene({ flipRef, canvasCount }) {
+  const canvaRef = Array(canvasCount)
+    .fill()
+    .map(() => useRef());
   const [isClicked, setIsClicked] = useState(null);
 
   const handleClick = (index) => {
@@ -33,15 +35,11 @@ export default function Scene({ flipRef }) {
 
   return (
     <>
-      <Canvas onClick={() => handleClick(0)} ref={canvaRef[0]}>
-        <Model isClicked={isClicked} />
-      </Canvas>
-      <Canvas onClick={() => handleClick(1)} ref={canvaRef[1]}>
-        <Model isClicked={isClicked} />
-      </Canvas>
-      <Canvas onClick={() => handleClick(2)} ref={canvaRef[2]}>
-        <Model isClicked={isClicked} />
-      </Canvas>
+      {canvaRef.map((ref, index) => (
+        <Canvas key={index} onClick={() => handleClick(index)} ref={ref}>
+          <Model isClicked={isClicked} />
+        </Canvas>
+      ))}
     </>
   );
 }

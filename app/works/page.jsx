@@ -49,34 +49,6 @@ export default function Works() {
     return () => ctx.revert();
   }, []);
 
-  // useEffect(() => {
-  //   let ctx = gsap.context(() => {
-  //     function getScrollAmount() {
-  //       let containerWidth = scrollContainer.current.scrollWidth;
-  //       return containerWidth - window.innerWidth;
-  //     }
-
-  //     const tween = gsap.to(flipRef.current, {
-  //       x: getScrollAmount,
-  //       duration: 3,
-  //       ease: "none",
-  //     });
-
-  //     ScrollTrigger.create({
-  //       trigger: flipRef.current,
-  //       start: "top top",
-  //       end: "+=100%",
-  //       pin: true,
-  //       animation: tween,
-  //       scrub: 1,
-  //       markers: true,
-  //       invalidateOnRefresh: true,
-  //     });
-  //   });
-
-  //   return () => ctx.revert();
-  // }, []);
-
   return (
     <main>
       <div
@@ -91,7 +63,7 @@ export default function Works() {
         className="
         flex items-center h-[100vh] w-[200vw] bg-gray-500"
       >
-        <Scene flipRef={flipRef} />
+        <Scene flipRef={flipRef} canvasCount={3} />
       </div>
     </main>
   );
