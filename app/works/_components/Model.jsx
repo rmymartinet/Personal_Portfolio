@@ -2,7 +2,7 @@ import { useAspect, useTexture } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useControls } from "leva";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import * as THREE from "three";
 import { fragment, vertex } from "./Shader";
 
@@ -10,8 +10,7 @@ import { Flip } from "gsap/Flip";
 
 gsap.registerPlugin(Flip);
 
-export default function Model() {
-  const [isClicked, setIsClicked] = useState(false);
+export default function Model({ isClicked }) {
   const timeSpeed = useRef(0.04); // Utilisation de useRef pour stocker timeSpeed
   const amplitudeValue = useRef(0.25);
 
@@ -34,7 +33,6 @@ export default function Model() {
   });
 
   const handleClick = () => {
-    setIsClicked(!isClicked);
     const scaleMultiplier = !isClicked ? 2 : 1;
     gsap.to(image.current.scale, {
       x: scale[0] * scaleMultiplier,

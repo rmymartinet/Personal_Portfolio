@@ -11,22 +11,19 @@ gsap.registerPlugin(Flip);
  * !TODO Réaliser l'animation de flip il faut qu'il soit toujours centrer dans le viewport
  */
 
-export default function Scene({ scrollContainer }) {
-  const flipRef = useRef();
-  const canvaRef = useRef();
+export default function Scene({ flipRef }) {
+  const canvaRef = [useRef(), useRef(), useRef()];
+  const [isClicked, setIsClicked] = useState(null);
 
-  const [isClicked, setIsClicked] = useState(false);
+  const handleClick = (index) => {
+    setIsClicked(index);
 
-  const handleClick = () => {
-    setIsClicked(!isClicked);
-
-    let state = Flip.getState(canvaRef.current);
-    let canvaContainer = canvaRef.current;
+    let state = Flip.getState(canvaRef[index].current);
+    let canvaContainer = canvaRef[index].current;
     let flipContainer = flipRef.current;
 
     if (!isClicked) {
       flipContainer.appendChild(canvaContainer);
-
       Flip.from(state, {
         duration: 1,
         ease: "power2.inOut",
@@ -36,22 +33,14 @@ export default function Scene({ scrollContainer }) {
 
   return (
     <>
-      <div
-        ref={flipRef}
-        className="
-        fixed top-1/2 right-1/2 
-        transform translate-x-1/2 translate-y-1/2
-        w-1/4 h-1/4 border border-red-500  flex items-center justify-center
-        "
-      ></div>
-      <Canvas onClick={handleClick} ref={canvaRef}>
-        <Model />
+      <Canvas onClick={() => handleClick(0)} ref={canvaRef[0]}>
+        <Model isClicked={isClicked} />
       </Canvas>
-      <Canvas>
-        <Model />
+      <Canvas onClick={() => handleClick(1)} ref={canvaRef[1]}>
+        <Model isClicked={isClicked} />
       </Canvas>
-      <Canvas>
-        <Model />
+      <Canvas onClick={() => handleClick(2)} ref={canvaRef[2]}>
+        <Model isClicked={isClicked} />
       </Canvas>
     </>
   );
