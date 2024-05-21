@@ -1,9 +1,11 @@
 "use client";
 
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import dynamic from "next/dynamic";
-import { useLayoutEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,54 +18,47 @@ const Scene = dynamic(() => import("../works/_components/Scene"), {
  */
 
 export default function Works() {
+  const router = useRouter();
   const scrollContainer = useRef();
   const flipRef = useRef();
 
   /** Scroll horizontal
    */
 
-  useLayoutEffect(() => {
-    let ctx = gsap.context(() => {
-      function getScrollAmount() {
-        let containerWidth = scrollContainer.current.scrollWidth;
-        return -(containerWidth - window.innerWidth);
-      }
+  useGSAP(() => {
+    function getScrollAmount() {
+      let containerWidth = scrollContainer.current.scrollWidth;
+      return -(containerWidth - window.innerWidth);
+    }
 
-      const tween = gsap.to(scrollContainer.current, {
-        x: getScrollAmount,
-        duration: 3,
-        ease: "none",
-      });
-
-      ScrollTrigger.create({
-        trigger: scrollContainer.current,
-        start: "top top",
-        end: () => `+=${getScrollAmount() * -1}`,
-        pin: true,
-        animation: tween,
-        scrub: 1,
-        invalidateOnRefresh: true,
-      });
+    const tween = gsap.to(scrollContainer.current, {
+      x: getScrollAmount,
+      duration: 3,
+      ease: "none",
     });
 
-    return () => ctx.revert();
-  }, []);
+    ScrollTrigger.create({
+      trigger: scrollContainer.current,
+      start: "top top",
+      end: () => `+=${getScrollAmount() * -1}`,
+      pin: true,
+      animation: tween,
+      scrub: 1,
+      invalidateOnRefresh: true,
+    });
+  });
 
   return (
-    <main>
+    <main className="overflow-x-hidden">
       <div
         ref={flipRef}
-        className="
-        fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
-        w-1/4 h-1/4 border border-red-500  flex items-center justify-center z-10
-        "
+        className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  z-10  flex items-center justify-center"
       ></div>
       <div
         ref={scrollContainer}
-        className="
-        flex items-center h-[100vh] w-[200vw] bg-gray-500"
+        className="flex items-center justify-between h-[100vh] w-[300vw]"
       >
-        <Scene flipRef={flipRef} canvasCount={3} />
+        <Scene router={router} flipRef={flipRef} canvasCount={3} />
       </div>
     </main>
   );

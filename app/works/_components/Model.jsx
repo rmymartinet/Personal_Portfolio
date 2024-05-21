@@ -11,8 +11,9 @@ import { Flip } from "gsap/Flip";
 gsap.registerPlugin(Flip);
 
 export default function Model({ isClicked }) {
-  const timeSpeed = useRef(0.04); // Utilisation de useRef pour stocker timeSpeed
-  const amplitudeValue = useRef(0.25);
+  const timeSpeed = useRef(0); // Utilisation de useRef pour stocker timeSpeed
+  const amplitudeValue = useRef(0);
+  const waveLengthValue = useRef(0);
 
   const image = useRef();
   const texture = useTexture("/images/car.jpg");
@@ -21,7 +22,7 @@ export default function Model({ isClicked }) {
   const scale = useAspect(width, height, 0.3);
   const { amplitude, waveLength } = useControls({
     amplitude: { value: amplitudeValue, min: 0, max: 2, step: 0.1 },
-    waveLength: { value: 5, min: 0, max: 20, step: 0.5 },
+    waveLength: { value: waveLengthValue, min: 0, max: 20, step: 0.5 },
   });
 
   const uniforms = useRef({
@@ -33,7 +34,7 @@ export default function Model({ isClicked }) {
   });
 
   const handleClick = () => {
-    const scaleMultiplier = !isClicked ? 2 : 1;
+    const scaleMultiplier = !isClicked ? 1 : 1;
     gsap.to(image.current.scale, {
       x: scale[0] * scaleMultiplier,
       y: scale[1] * scaleMultiplier,
@@ -46,7 +47,7 @@ export default function Model({ isClicked }) {
       duration: 1,
       onComplete: () => {
         gsap.to(timeSpeed, {
-          current: 0.04, // Revenir à la vitesse normale
+          current: 0, // Revenir à la vitesse normale
           duration: 1,
         });
       },
@@ -57,7 +58,18 @@ export default function Model({ isClicked }) {
       duration: 1,
       onComplete: () => {
         gsap.to(amplitudeValue, {
-          current: 0.25, // Revenir à la vitesse normale
+          current: 0, // Revenir à la vitesse normale
+          duration: 1,
+        });
+      },
+    });
+
+    gsap.to(waveLengthValue, {
+      current: 5, // Accélérer temporairement
+      duration: 1,
+      onComplete: () => {
+        gsap.to(amplitudeValue, {
+          current: 0, // Revenir à la vitesse normale
           duration: 1,
         });
       },
@@ -78,7 +90,7 @@ export default function Model({ isClicked }) {
 
     image.current.material.uniforms.uTime.value += timeSpeed.current;
     image.current.material.uniforms.uAmplitude.value = amplitudeValue.current;
-    image.current.material.uniforms.uWaveLength.value = waveLength;
+    image.current.material.uniforms.uWaveLength.value = waveLengthValue.current;
   });
 
   return (
