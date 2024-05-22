@@ -52,7 +52,7 @@ export default function Works() {
     <main className="overflow-x-hidden">
       <div
         ref={flipRef}
-        className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  z-10  flex items-center justify-center"
+        className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vh]  flex items-center justify-center "
       ></div>
       <div
         ref={scrollContainer}

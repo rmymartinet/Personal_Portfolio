@@ -34,13 +34,13 @@ export default function Model({ isClicked }) {
   });
 
   const handleClick = () => {
-    const scaleMultiplier = !isClicked ? 1 : 1;
-    gsap.to(image.current.scale, {
-      x: scale[0] * scaleMultiplier,
-      y: scale[1] * scaleMultiplier,
-      ease: "power2.inOut",
-      duration: 1,
-    });
+    // const scaleMultiplier = !isClicked ? 1 : 1;
+    // gsap.to(image.current.scale, {
+    //   x: scale[0] * scaleMultiplier,
+    //   y: scale[1] * scaleMultiplier,
+    //   ease: "power2.inOut",
+    //   duration: 1,
+    // });
 
     gsap.to(timeSpeed, {
       current: 0.2, // Accélérer temporairement

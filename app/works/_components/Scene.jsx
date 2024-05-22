@@ -1,10 +1,10 @@
+import useStore from "@/store/CanvaDimension";
 import { useGSAP } from "@gsap/react";
 import { Canvas } from "@react-three/fiber";
 import gsap from "gsap";
 import { Flip } from "gsap/Flip";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useRef, useState } from "react";
-
+import { useEffect, useRef, useState } from "react";
 import Model from "./Model";
 gsap.registerPlugin(ScrollTrigger);
 gsap.registerPlugin(Flip);
@@ -19,6 +19,7 @@ export default function Scene({ flipRef, canvasCount, router }) {
     .fill()
     .map(() => useRef());
   const [isClicked, setIsClicked] = useState(null);
+  const setCanvasDimensions = useStore((state) => state.setCanvasDimensions);
 
   const handleClick = (index) => {
     setIsClicked(index);
@@ -54,6 +55,15 @@ export default function Scene({ flipRef, canvasCount, router }) {
       }
     });
   }, [isClicked, canvaRef, flipRef, router]);
+
+  useEffect(() => {
+    canvaRef.forEach((ref, index) => {
+      const canvaWidth = ref.current.offsetWidth;
+      const canvaHeight = ref.current.offsetHeight;
+
+      setCanvasDimensions(canvaWidth, canvaHeight);
+    });
+  }, []);
 
   return (
     <>
