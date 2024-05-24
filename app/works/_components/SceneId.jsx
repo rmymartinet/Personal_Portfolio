@@ -4,7 +4,7 @@ import gsap from "gsap";
 import { Flip } from "gsap/Flip";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRef, useState } from "react";
-import Model from "./Model";
+import ModelId from "./ModelId";
 gsap.registerPlugin(ScrollTrigger);
 gsap.registerPlugin(Flip);
 
@@ -58,7 +58,7 @@ export default function Scene({ flipRef, canvasCount, router }) {
     <>
       {canvaRef.map((ref, index) => (
         <Canvas key={index} onClick={() => handleClick(index)} ref={ref}>
-          <Model isClicked={isClicked} />
+          <ModelId isClicked={isClicked} />
         </Canvas>
       ))}
     </>

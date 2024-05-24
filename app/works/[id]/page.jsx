@@ -1,13 +1,12 @@
 "use client";
 
-import useStore from "@/store/CanvaDimension";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import dynamic from "next/dynamic";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const Scene = dynamic(() => import("../../works/_components/Scene"), {
+const SceneId = dynamic(() => import("../../works/_components/SceneId"), {
   ssr: false,
 });
 
@@ -18,15 +17,19 @@ const Scene = dynamic(() => import("../../works/_components/Scene"), {
  */
 
 export default function Work() {
-  const { width, height } = useStore((state) => state.canvasDimensions);
-
   return (
     <>
-      {/* <div className="fixed top-1/2 left-1/2 transform -translate-x-[51.5%] -translate-y-1/2 flex items-center justify-center  ">
-        <Image width={500} height={height} src="/images/car.jpg" />
-      </div> */}
-      <div className="fixed top-1/2 left-1/2 transform -translate-x-[50%] -translate-y-1/2 flex items-center justify-center w-full h-screen">
-        <Scene canvasCount={1} />
+      <div className="">
+        <div className=" relative flex items-end justify-around h-screen w-[100vw] border-4 border-blue-500">
+          <div className="flex w-full h-screen border-4 border-red-500  items-center justify-center">
+            <SceneId canvasCount={1} />
+          </div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-4xl">
+            Bonjour c'est moi
+          </div>
+        </div>
+
+        <div className="h-[200vh]"></div>
       </div>
     </>
   );

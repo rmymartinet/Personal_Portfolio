@@ -10,7 +10,7 @@ import { Flip } from "gsap/Flip";
 
 gsap.registerPlugin(Flip);
 
-export default function Model() {
+export default function ModelId() {
   const timeSpeed = useRef(0);
   const amplitudeValue = useRef(0);
   const waveLengthValue = useRef(0);
@@ -19,7 +19,7 @@ export default function Model() {
   const texture = useTexture("/images/paysage.jpg");
   const { viewport } = useThree();
   const { width, height } = texture.image;
-  const [scaleX, scaleY] = useAspect(width, height, 0.3);
+  const [scaleX, scaleY] = useAspect(viewport.width, viewport.height);
 
   const { amplitude, waveLength } = useControls({
     amplitude: { value: amplitudeValue.current, min: 0, max: 2, step: 0.1 },
