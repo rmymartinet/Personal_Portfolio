@@ -1,68 +1,32 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
 import { Canvas } from "@react-three/fiber";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
 import { Suspense, useRef } from "react";
-import CarouselItem from "./_components/CarouselItems";
+import Carousel from "./_components/Carousel";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const Scene = dynamic(() => import("../works/_components/Scene"), {
-  ssr: false,
-});
-
 export default function Works() {
-  const router = useRouter();
-  const scrollContainer = useRef();
-  const flipRef = useRef();
   const sceneContainer = useRef();
 
-  /** Scroll horizontal
+  /**
+   * !TODO mettre un etat avec zustand pour le click agrandir le container
+   * !TODO Corriger le bug de la scrollbar avec un overflow hidden
    */
 
-  useGSAP(() => {
-    function getScrollAmount() {
-      let containerWidth = scrollContainer.current.scrollWidth;
-      return -(containerWidth - window.innerWidth);
-    }
-
-    const tween = gsap.to(scrollContainer.current, {
-      x: getScrollAmount,
-      duration: 3,
-      ease: "none",
-    });
-
-    ScrollTrigger.create({
-      trigger: scrollContainer.current,
-      start: "bottom bottom",
-      end: () => `+=${getScrollAmount() * -1}`,
-      pin: true,
-      animation: tween,
-      scrub: 1,
-      invalidateOnRefresh: true,
-    });
-  });
-
   return (
-    <main className="overflow-x-hidden">
+    <main className="flex items-center justify-center">
       <div
-        ref={flipRef}
-        className="fixed top-1/2 left-1/2 transform -translate-x-[49.1%] -translate-y-1/2 w-[50vw] h-[50vh] flex items-center justify-center "
-      ></div>
-      <div
-        ref={scrollContainer}
-        className="flex items-end justify-around h-screen w-[100vw] border-4 border-blue-500"
+        ref={sceneContainer}
+        className="w-1/2 h-1/2 border-4 border-red-500 overflow-hidden"
       >
         <Canvas>
           <Suspense fallback={null}>
-            <CarouselItem />
+            <Carousel />
           </Suspense>
         </Canvas>
-        {/* <Scene router={router} flipRef={flipRef} canvasCount={3} /> */}
       </div>
     </main>
   );

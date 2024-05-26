@@ -3,7 +3,7 @@ import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useEffect, useMemo, useRef } from "react";
 
-const Plane = ({ texture, width, height, active, ...props }) => {
+const Plane = ({ navigation, texture, width, height, active, ...props }) => {
   const $mesh = useRef();
   const { viewport } = useThree();
   const tex = useTexture(texture);
@@ -18,15 +18,18 @@ const Plane = ({ texture, width, height, active, ...props }) => {
 
       gsap.to($mesh.current.material.uniforms.uProgress, {
         value: active ? 1 : 0,
-        duration: 2.5,
-        ease: "power3.out,",
+        duration: 1.5,
+        ease: "power2.inOut,",
       });
 
       gsap.to($mesh.current.material.uniforms.uRes.value, {
         x: active ? viewport.width : width,
         y: active ? viewport.height : height,
-        duration: 2.5,
-        ease: "power3.out,",
+        duration: 1.5,
+        ease: "power2.inOut,",
+        onComplete: () => {
+          if (active) navigation.push("/works/123");
+        },
       });
     }
   }, [viewport, active]);
@@ -52,10 +55,11 @@ const Plane = ({ texture, width, height, active, ...props }) => {
           vec3 pos = position;
           float angle = uProgress * 3.14159265 / 2.;
           float wave = cos(angle);
-          float c = sin(length(uv - .5) * 15. + uProgress * 12.) * .5 + .5;
+          float c = sin(length(uv - vec2(1.0, 1.0)) * 10. + uProgress * 12.) * .5 + .5;
+          vec2 modifiedUv = vec2(1.0 - uv.x, 1.0 - uv.y);
           pos.x *= mix(1., uZoomScale.x + wave * c, uProgress);
           pos.y *= mix(1., uZoomScale.y + wave * c, uProgress);
-
+      
           gl_Position = projectionMatrix * modelViewMatrix * vec4( pos, 1.0 );
         }
       `,
