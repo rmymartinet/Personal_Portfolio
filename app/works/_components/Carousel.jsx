@@ -13,8 +13,8 @@ import CarouselItem from "./CarouselItems";
 Plane Settings
 ------------------------------*/
 const planeSettings = {
-  width: 2.5,
-  height: 2.5,
+  width: 7.6,
+  height: 5,
   overlap: 0,
 };
 
@@ -29,7 +29,7 @@ gsap.defaults({
 /*------------------------------
 Carousel
 ------------------------------*/
-const Carousel = ({ setIsClicked }) => {
+const Carousel = () => {
   const [$root, setRoot] = useState();
   const [activePlane, setActivePlane] = useState(null);
   const [slideIndex, setSlideIndex] = useState(0);

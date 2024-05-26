@@ -1,3 +1,4 @@
+import useStore from "@/stateStore/CanvaDimension";
 import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useEffect, useRef, useState } from "react";
@@ -19,6 +20,7 @@ const CarouselItem = ({
   const [isCloseActive, setCloseActive] = useState(false);
   const { viewport } = useThree();
   const timeoutID = useRef();
+  const { setIsClicked } = useStore();
 
   useEffect(() => {
     if (activePlane === index) {
@@ -104,6 +106,7 @@ const CarouselItem = ({
       ref={$root}
       onClick={() => {
         setActivePlane(index);
+        setIsClicked(true);
       }}
       // onPointerEnter={() => setHover(true)}
       // onPointerLeave={() => setHover(false)}
