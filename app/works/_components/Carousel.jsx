@@ -13,9 +13,8 @@ import CarouselItem from "./CarouselItems";
 Plane Settings
 ------------------------------*/
 const planeSettings = {
-  width: 7.6,
-  height: 5,
-  overlap: 0,
+  width: 2.5,
+  height: 2.5,
 };
 
 /*------------------------------

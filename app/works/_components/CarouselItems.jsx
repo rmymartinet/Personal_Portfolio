@@ -39,6 +39,7 @@ const CarouselItem = ({
       if (slideIndex === index) {
         gsap.to($root.current.position, {
           x: 0,
+          opacity: 1,
           duration: 1.5,
           ease: "power3.inOut",
           onComplete: () => {
@@ -58,6 +59,7 @@ const CarouselItem = ({
       } else {
         gsap.to($root.current.position, {
           x: slideIndex % 2 !== 0 ? -100 : 100,
+          opacity: 0,
           duration: 1.5,
           ease: "power3.inOut",
           onComplete: () => {
@@ -65,8 +67,8 @@ const CarouselItem = ({
           },
         });
         gsap.to($root.current.scale, {
-          x: 0.8,
-          y: 0.8,
+          x: 0,
+          y: 0,
           duration: 1.5,
           ease: "power3.inOut",
           onComplete: () => {
