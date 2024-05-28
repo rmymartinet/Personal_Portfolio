@@ -1,15 +1,12 @@
 const images = [
   {
-    image:
-      "https://raw.githubusercontent.com/supahfunk/webgl-carousel/main/public/img/1.jpg",
+    image: "/images/city.jpg",
   },
   {
-    image:
-      "https://raw.githubusercontent.com/supahfunk/webgl-carousel/main/public/img/2.jpg",
+    image: "/images/car.jpg",
   },
   {
-    image:
-      "https://raw.githubusercontent.com/supahfunk/webgl-carousel/main/public/img/3.jpg",
+    image: "/images/water.jpg",
   },
 ];
 

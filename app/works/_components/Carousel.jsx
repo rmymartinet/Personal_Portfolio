@@ -1,5 +1,6 @@
 import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
+import { useRouter } from "next/navigation";
 import { useMemo, useRef, useState } from "react";
 import { usePrevious } from "react-use";
 import images from "../../data/data";
@@ -29,6 +30,7 @@ gsap.defaults({
 Carousel
 ------------------------------*/
 const Carousel = () => {
+  const router = useRouter();
   const [$root, setRoot] = useState();
   const [activePlane, setActivePlane] = useState(null);
   const [slideIndex, setSlideIndex] = useState(0);
@@ -37,10 +39,7 @@ const Carousel = () => {
   const { viewport } = useThree();
 
   const progress = useRef(0);
-  const startX = useRef(0);
-  const isDown = useRef(false);
   const speedWheel = 0.01;
-  const speedDrag = -0.3;
   const $items = useMemo(() => {
     if ($root) return $root.children;
   }, [$root]);
@@ -95,46 +94,11 @@ const Carousel = () => {
   };
 
   /*--------------------
-  Handle Down
-  --------------------*/
-  const handleDown = (e) => {
-    if (activePlane !== null) return;
-    isDown.current = true;
-    startX.current = e.clientX || (e.touches && e.touches[0].clientX) || 0;
-  };
-
-  /*--------------------
-  Handle Up
-  --------------------*/
-  const handleUp = () => {
-    isDown.current = false;
-  };
-
-  /*--------------------
-  Handle Move
-  --------------------*/
-  const handleMove = (e) => {
-    if (activePlane !== null || !isDown.current) return;
-    const x = e.clientX || (e.touches && e.touches[0].clientX) || 0;
-    const mouseProgress = (x - startX.current) * speedDrag;
-    progress.current = progress.current + mouseProgress;
-    startX.current = x;
-  };
-
-  /*--------------------
   Render Plane Events
   --------------------*/
   const renderPlaneEvents = () => {
     return (
-      <mesh
-        position={[0, 0, -0.01]}
-        onWheel={handleWheel}
-        onPointerDown={handleDown}
-        onPointerUp={handleUp}
-        onPointerMove={handleMove}
-        onPointerLeave={handleUp}
-        onPointerCancel={handleUp}
-      >
+      <mesh position={[0, 0, -0.01]} onWheel={handleWheel}>
         <planeGeometry args={[viewport.width, viewport.height]} />
         <meshBasicMaterial transparent={true} opacity={0} />
       </mesh>
@@ -149,6 +113,7 @@ const Carousel = () => {
       <group ref={setRoot}>
         {images.map((item, i) => (
           <CarouselItem
+            router={router}
             width={planeSettings.width}
             height={planeSettings.height}
             setActivePlane={setActivePlane}

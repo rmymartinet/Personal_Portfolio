@@ -2,11 +2,24 @@ import { useTexture } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useEffect, useMemo, useRef } from "react";
+import { LinearFilter } from "three";
 
-const Plane = ({ navigation, texture, width, height, active, ...props }) => {
+import images from "@/app/data/data";
+
+const Plane = ({ index, router, texture, width, height, active, ...props }) => {
   const $mesh = useRef();
   const { viewport } = useThree();
   const tex = useTexture(texture);
+  tex.minFilter = LinearFilter;
+
+  const preloadImage = (src) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = resolve;
+      img.onerror = reject;
+    });
+  };
 
   useEffect(() => {
     if ($mesh.current.material) {
@@ -18,17 +31,22 @@ const Plane = ({ navigation, texture, width, height, active, ...props }) => {
 
       gsap.to($mesh.current.material.uniforms.uProgress, {
         value: active ? 1 : 0,
-        duration: 1.5,
+        duration: 1.7,
         ease: "power2.inOut,",
       });
 
       gsap.to($mesh.current.material.uniforms.uRes.value, {
         x: active ? viewport.width : width,
         y: active ? viewport.height : height,
-        duration: 1.5,
+        duration: 1.7,
         ease: "power2.inOut,",
-        onComplete: () => {
-          if (active) navigation.push("/works/123");
+        onComplete: async () => {
+          if (active) {
+            console.log(index);
+            console.log(images[index].image);
+            await preloadImage(images[index].image);
+            router.push(`works/${index}`);
+          }
         },
       });
     }

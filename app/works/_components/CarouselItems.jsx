@@ -1,7 +1,9 @@
-import useStore from "@/stateStore/CanvaDimension";
 import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useEffect, useRef, useState } from "react";
+
+import { useNavigationStore } from "@/stateStore/Navigation";
+
 import Plane from "./Plane";
 
 const CarouselItem = ({
@@ -13,6 +15,7 @@ const CarouselItem = ({
   slideIndex,
   isAnimating,
   item,
+  router,
 }) => {
   const $root = useRef();
   const [hover, setHover] = useState(false);
@@ -20,7 +23,7 @@ const CarouselItem = ({
   const [isCloseActive, setCloseActive] = useState(false);
   const { viewport } = useThree();
   const timeoutID = useRef();
-  const { setIsClicked } = useStore();
+  const { setClickedIndex } = useNavigationStore();
 
   useEffect(() => {
     if (activePlane === index) {
@@ -39,8 +42,7 @@ const CarouselItem = ({
       if (slideIndex === index) {
         gsap.to($root.current.position, {
           x: 0,
-          opacity: 1,
-          duration: 1.5,
+          duration: 1,
           ease: "power3.inOut",
           onComplete: () => {
             isAnimating.current = false;
@@ -50,7 +52,8 @@ const CarouselItem = ({
         gsap.to($root.current.scale, {
           x: 1,
           y: 1,
-          duration: 1.5,
+          duration: 1,
+          delay: 0.8,
           ease: "power3.inOut",
           onComplete: () => {
             isAnimating.current = false;
@@ -59,8 +62,7 @@ const CarouselItem = ({
       } else {
         gsap.to($root.current.position, {
           x: slideIndex % 2 !== 0 ? -100 : 100,
-          opacity: 0,
-          duration: 1.5,
+          duration: 2,
           ease: "power3.inOut",
           onComplete: () => {
             isAnimating.current = false;
@@ -69,7 +71,7 @@ const CarouselItem = ({
         gsap.to($root.current.scale, {
           x: 0,
           y: 0,
-          duration: 1.5,
+          duration: 2,
           ease: "power3.inOut",
           onComplete: () => {
             isAnimating.current = false;
@@ -82,15 +84,15 @@ const CarouselItem = ({
   /*------------------------------
   Hover effect
   ------------------------------*/
-  // useEffect(() => {
-  //   const hoverScale = hover && !isActive ? 1.1 : 1;
-  //   gsap.to($root.current.scale, {
-  //     x: hoverScale,
-  //     y: hoverScale,
-  //     duration: 0.5,
-  //     ease: "power3.out",
-  //   });
-  // }, [hover, isActive]);
+  useEffect(() => {
+    const hoverScale = hover && !isActive ? 1.1 : 1;
+    gsap.to($root.current.scale, {
+      x: hoverScale,
+      y: hoverScale,
+      duration: 0.5,
+      ease: "power3.out",
+    });
+  }, [hover, isActive]);
 
   const handleClose = (e) => {
     e.stopPropagation();
@@ -108,16 +110,19 @@ const CarouselItem = ({
       ref={$root}
       onClick={() => {
         setActivePlane(index);
-        setIsClicked(true);
+        setClickedIndex(index);
       }}
-      // onPointerEnter={() => setHover(true)}
-      // onPointerLeave={() => setHover(false)}
+      onPointerEnter={() => setHover(true)}
+      onPointerLeave={() => setHover(false)}
     >
       <Plane
         width={width}
         height={height}
         texture={item.image}
         active={isActive}
+        hover={hover}
+        router={router}
+        index={index}
       />
 
       {isCloseActive ? (
