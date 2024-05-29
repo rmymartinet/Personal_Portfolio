@@ -42,7 +42,7 @@ const CarouselItem = ({
       if (slideIndex === index) {
         gsap.to($root.current.position, {
           x: 0,
-          duration: 1,
+          duration: 1.5,
           ease: "power3.inOut",
           onComplete: () => {
             isAnimating.current = false;
@@ -53,7 +53,7 @@ const CarouselItem = ({
           x: 1,
           y: 1,
           duration: 1,
-          delay: 0.8,
+          delay: 0.5,
           ease: "power3.inOut",
           onComplete: () => {
             isAnimating.current = false;
@@ -62,7 +62,7 @@ const CarouselItem = ({
       } else {
         gsap.to($root.current.position, {
           x: slideIndex % 2 !== 0 ? -100 : 100,
-          duration: 2,
+          duration: 1.5,
           ease: "power3.inOut",
           onComplete: () => {
             isAnimating.current = false;
@@ -71,7 +71,7 @@ const CarouselItem = ({
         gsap.to($root.current.scale, {
           x: 0,
           y: 0,
-          duration: 2,
+          duration: 1.5,
           ease: "power3.inOut",
           onComplete: () => {
             isAnimating.current = false;

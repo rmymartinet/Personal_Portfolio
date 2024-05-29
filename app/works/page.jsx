@@ -17,7 +17,7 @@ export default function Works() {
    */
 
   return (
-    <main className="">
+    <main className="overflow-hidden">
       <div className="w-[100vw] h-screen overflow-hidden">
         <Canvas ref={sceneContainer}>
           <Suspense fallback={null}>

@@ -1,16 +1,17 @@
+import { useBackNavigationStore } from "@/stateStore/BackNavigation";
 import { useTexture } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useEffect, useMemo, useRef } from "react";
 import { LinearFilter } from "three";
-
-import images from "@/app/data/data";
+import images from "../../data/data";
 
 const Plane = ({ index, router, texture, width, height, active, ...props }) => {
   const $mesh = useRef();
   const { viewport } = useThree();
   const tex = useTexture(texture);
   tex.minFilter = LinearFilter;
+  const { isClicked } = useBackNavigationStore();
 
   const preloadImage = (src) => {
     return new Promise((resolve, reject) => {
@@ -35,6 +36,8 @@ const Plane = ({ index, router, texture, width, height, active, ...props }) => {
         ease: "power2.inOut,",
       });
 
+      //Ou quand j'ai cliqué sur
+
       gsap.to($mesh.current.material.uniforms.uRes.value, {
         x: active ? viewport.width : width,
         y: active ? viewport.height : height,
@@ -42,15 +45,25 @@ const Plane = ({ index, router, texture, width, height, active, ...props }) => {
         ease: "power2.inOut,",
         onComplete: async () => {
           if (active) {
-            console.log(index);
-            console.log(images[index].image);
             await preloadImage(images[index].image);
             router.push(`works/${index}`);
           }
         },
       });
+
+      gsap.to($mesh.current.material.uniforms.uProgress, {
+        value: isClicked ? 1 : 0,
+        duration: 1.7,
+        ease: "power2.inOut,",
+      });
+      gsap.to($mesh.current.material.uniforms.uRes.value, {
+        x: isClicked ? viewport.width : width,
+        y: isClicked ? viewport.height : height,
+        duration: 1.7,
+        ease: "power2.inOut,",
+      });
     }
-  }, [viewport, active]);
+  }, [viewport, active, isClicked]);
 
   const shaderArgs = useMemo(
     () => ({
