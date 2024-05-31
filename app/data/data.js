@@ -1,18 +1,18 @@
 const images = [
   {
     image: "/images/city.jpg",
-    title: "Margritt",
-    subtitle: "Portfolio",
+    title: "title",
+    subtitle: "subtitle",
   },
   {
     image: "/images/car.jpg",
-    title: "StreamWorld",
-    subtitle: "Interactive streaming platform",
+    title: "title",
+    subtitle: "subtitle",
   },
   {
     image: "/images/water.jpg",
-    title: "Netflix Clone",
-    subtitle: "Netflix clone",
+    title: "title",
+    subtitle: "subtitle",
   },
 ];
 

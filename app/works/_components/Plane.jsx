@@ -1,4 +1,6 @@
 import { useBackNavigationStore } from "@/stateStore/BackNavigation";
+import { useNavigationStore } from "@/stateStore/Navigation";
+import { useIsActiveStore } from "@/stateStore/isActive";
 import { useTexture } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
@@ -6,12 +8,14 @@ import { useEffect, useMemo, useRef } from "react";
 import { LinearFilter } from "three";
 import images from "../../data/data";
 
-const Plane = ({ index, router, texture, width, height, active, ...props }) => {
+const Plane = ({ hover, router, texture, width, height, active, ...props }) => {
   const $mesh = useRef();
   const { viewport } = useThree();
   const tex = useTexture(texture);
   tex.minFilter = LinearFilter;
-  const { isClicked } = useBackNavigationStore();
+  const { isActive, setIsActive } = useIsActiveStore();
+  const { isClicked, setIsClicked } = useBackNavigationStore();
+  const { isClickedIndex } = useNavigationStore();
 
   const preloadImage = (src) => {
     return new Promise((resolve, reject) => {
@@ -22,7 +26,14 @@ const Plane = ({ index, router, texture, width, height, active, ...props }) => {
     });
   };
 
+  /*--------------------
+  Animate Plane to full screen
+  --------------------*/
+
   useEffect(() => {
+    /*--------------------
+  Animate Plane to the other page
+  --------------------*/
     if ($mesh.current.material) {
       //  Setting the 'uZoomScale' uniform in the 'Plane' component to resize the texture proportionally to the dimensions of the viewport.
       $mesh.current.material.uniforms.uZoomScale.value.x =
@@ -30,40 +41,62 @@ const Plane = ({ index, router, texture, width, height, active, ...props }) => {
       $mesh.current.material.uniforms.uZoomScale.value.y =
         viewport.height / height;
 
-      gsap.to($mesh.current.material.uniforms.uProgress, {
-        value: active ? 1 : 0,
-        duration: 1.7,
-        ease: "power2.inOut,",
-      });
+      if (isActive === true) {
+        gsap.to($mesh.current.material.uniforms.uProgress, {
+          value: isActive ? 1 : 0,
+          duration: 1.7,
+          ease: "power2.inOut,",
+        });
 
-      //Ou quand j'ai cliqué sur
+        gsap.to($mesh.current.material.uniforms.uRes.value, {
+          x: isActive ? viewport.width : width,
+          y: isActive ? viewport.height : height,
+          duration: 1.7,
+          ease: "power2.inOut,",
+          onComplete: async () => {
+            if (isActive) {
+              await preloadImage(images[isClickedIndex].image);
+              router.push(`works/${isClickedIndex}`);
+            }
+            setTimeout(() => {
+              setIsActive(false);
+            }, 200);
+          },
+        });
+      }
 
-      gsap.to($mesh.current.material.uniforms.uRes.value, {
-        x: active ? viewport.width : width,
-        y: active ? viewport.height : height,
-        duration: 1.7,
-        ease: "power2.inOut,",
-        onComplete: async () => {
-          if (active) {
-            await preloadImage(images[index].image);
-            router.push(`works/${index}`);
-          }
-        },
-      });
+      /*--------------------
+  Animate Plane back to its original position
+  --------------------*/
 
-      gsap.to($mesh.current.material.uniforms.uProgress, {
-        value: isClicked ? 1 : 0,
-        duration: 1.7,
-        ease: "power2.inOut,",
-      });
-      gsap.to($mesh.current.material.uniforms.uRes.value, {
-        x: isClicked ? viewport.width : width,
-        y: isClicked ? viewport.height : height,
-        duration: 1.7,
-        ease: "power2.inOut,",
-      });
+      if (isClicked === true && isActive === false) {
+        setIsClicked(false);
+        gsap.from($mesh.current.material.uniforms.uProgress, {
+          value: 1,
+          duration: 1.7,
+          ease: "power2.inOut,",
+        });
+        gsap.to($mesh.current.material.uniforms.uProgress, {
+          value: 0,
+          duration: 1.7,
+          ease: "power2.inOut,",
+        });
+        gsap.from($mesh.current.material.uniforms.uRes.value, {
+          x: viewport.width,
+          y: viewport.height,
+          duration: 1.7,
+          ease: "power2.inOut,",
+        });
+
+        gsap.to($mesh.current.material.uniforms.uRes.value, {
+          x: width,
+          y: height,
+          duration: 1.7,
+          ease: "power2.inOut,",
+        });
+      }
     }
-  }, [viewport, active, isClicked]);
+  }, [viewport, isActive, isClicked]);
 
   const shaderArgs = useMemo(
     () => ({

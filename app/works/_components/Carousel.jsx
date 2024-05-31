@@ -1,14 +1,10 @@
+import { useNavigationStore } from "@/stateStore/Navigation";
 import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useRouter } from "next/navigation";
 import { useMemo, useRef, useState } from "react";
-import { usePrevious } from "react-use";
 import images from "../../data/data";
 import CarouselItem from "./CarouselItems";
-
-/**
- * !TODO Corriger l'apprition flash des images entre le scroll
- */
 
 /*------------------------------
 Plane Settings
@@ -33,13 +29,14 @@ const Carousel = () => {
   const router = useRouter();
   const [$root, setRoot] = useState();
   const [activePlane, setActivePlane] = useState(null);
-  const [slideIndex, setSlideIndex] = useState(0);
-  const prevActivePlane = usePrevious(activePlane);
+  const { isClickedIndex } = useNavigationStore();
+  const isClickedIndexIsNull = isClickedIndex === null ? 0 : isClickedIndex;
+  const [slideIndex, setSlideIndex] = useState(isClickedIndexIsNull);
   let isAnimating = useRef(false);
   const { viewport } = useThree();
 
   const progress = useRef(0);
-  const speedWheel = 0.01;
+  const speedWheel = 1;
   const $items = useMemo(() => {
     if ($root) return $root.children;
   }, [$root]);
@@ -54,6 +51,7 @@ const Carousel = () => {
     const slide = $items[index];
 
     gsap.to(slide.position, {
+      duration: 1,
       onComplete: () => {
         isAnimating.current = false;
       },
@@ -66,6 +64,7 @@ const Carousel = () => {
     const slide = $items[index];
 
     gsap.to(slide.position, {
+      duration: 1,
       onComplete: () => {
         isAnimating.current = false;
       },
@@ -80,7 +79,7 @@ const Carousel = () => {
     if (isAnimating.current) return;
     const isVerticalScroll = Math.abs(e.deltaY) > Math.abs(e.deltaX);
     const wheelProgress = isVerticalScroll ? e.deltaY : e.deltaX;
-    progress.current = progress.current + wheelProgress * speedWheel;
+    progress.current = progress.current += wheelProgress;
 
     if (progress.current > 0 && slideIndex < $items.length - 1) {
       hideSlide(slideIndex);
@@ -111,7 +110,7 @@ const Carousel = () => {
   const renderSlider = () => {
     return (
       <group ref={setRoot}>
-        {images.map((item, i) => (
+        {images.map((item, index) => (
           <CarouselItem
             router={router}
             width={planeSettings.width}
@@ -121,7 +120,7 @@ const Carousel = () => {
             slideIndex={slideIndex}
             key={item.image}
             item={item}
-            index={i}
+            index={index}
             isAnimating={isAnimating}
           />
         ))}

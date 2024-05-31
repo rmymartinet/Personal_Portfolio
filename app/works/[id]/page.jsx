@@ -1,33 +1,36 @@
 "use client";
 
 import images from "@/app/data/data";
-import { useNavigationStore } from "@/stateStore/Navigation";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-gsap.registerPlugin(ScrollTrigger);
-
-import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
-
 import { textGsapTransition } from "@/app/works/_animations/TextAnimation";
 import { useBackNavigationStore } from "@/stateStore/BackNavigation";
+import { useNavigationStore } from "@/stateStore/Navigation";
 import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRouter } from "next/navigation";
+import { useRef } from "react";
 
-/**
- * !TODO: Améliorer le chargement de l'image au premier rendu / Scene
- * !TODO: Voir  pour la taille de l'image par rapport à la Scene
- * !TODO: Faire la transition entre l'image et la scene
- */
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Work() {
-  const { isClickedIndex } = useNavigationStore();
   const router = useRouter();
   const imgContainer = useRef();
-  const { setClicked } = useBackNavigationStore();
+  const { setIsClicked } = useBackNavigationStore();
+  const { isClickedIndex } = useNavigationStore();
 
-  const [isClicked, setIsClicked] = useState(false);
+  const preloadImage = (src) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = resolve;
+      img.onerror = reject;
+    });
+  };
 
   useGSAP(() => {
+    /*--------------------
+  Animate text
+  --------------------*/
     if (imgContainer.current) {
       const h1 = imgContainer.current.querySelector("h1");
       const subtitle = imgContainer.current.querySelector("span");
@@ -37,9 +40,9 @@ export default function Work() {
     }
   }, []);
 
-  const handleClickBack = () => {
+  const handleClickBack = async () => {
+    await preloadImage(images[isClickedIndex].image);
     setIsClicked(true);
-    setClicked(true);
     router.back();
   };
 
@@ -47,11 +50,11 @@ export default function Work() {
     <div className="">
       <div
         ref={imgContainer}
-        className="flex w-full h-screen items-center justify-center relative"
+        className="flex w-full h-screen items-center justify-center relative z-50"
       >
         <button
           onClick={() => handleClickBack()}
-          className=" absolute top-0 left-1/2 p-3 rounded-md text-2xl text-white"
+          className="border-4 border-white absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 p-2 rounded-md text-2xl text-white"
         >
           Back
         </button>

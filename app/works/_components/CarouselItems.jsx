@@ -1,9 +1,7 @@
-import { useThree } from "@react-three/fiber";
+import { useNavigationStore } from "@/stateStore/Navigation";
+import { useIsActiveStore } from "@/stateStore/isActive";
 import gsap from "gsap";
 import { useEffect, useRef, useState } from "react";
-
-import { useNavigationStore } from "@/stateStore/Navigation";
-
 import Plane from "./Plane";
 
 const CarouselItem = ({
@@ -13,73 +11,36 @@ const CarouselItem = ({
   setActivePlane,
   activePlane,
   slideIndex,
-  isAnimating,
   item,
   router,
 }) => {
   const $root = useRef();
   const [hover, setHover] = useState(false);
-  const [isActive, setIsActive] = useState(false);
-  const [isCloseActive, setCloseActive] = useState(false);
-  const { viewport } = useThree();
-  const timeoutID = useRef();
-  const { setClickedIndex } = useNavigationStore();
+  const { isActive, setIsActive } = useIsActiveStore();
+  const { setIsClickedIndex } = useNavigationStore();
 
   useEffect(() => {
     if (activePlane === index) {
-      setIsActive(activePlane === index);
-      setCloseActive(true);
-    } else {
-      setIsActive(null);
+      setIsActive(true);
+      setHover(false);
     }
   }, [activePlane, index]);
 
+  /*------------------------------
+  Animation slide
+  ------------------------------*/
+
+  // Initial setting of the position and scale based on the active slide
   useEffect(() => {
     if ($root.current) {
-      gsap.killTweensOf($root.current.position);
-      gsap.killTweensOf($root.current.scale);
-
-      if (slideIndex === index) {
-        gsap.to($root.current.position, {
-          x: 0,
-          duration: 1.5,
-          ease: "power3.inOut",
-          onComplete: () => {
-            isAnimating.current = false;
-          },
-        });
-
-        gsap.to($root.current.scale, {
-          x: 1,
-          y: 1,
-          duration: 1,
-          delay: 0.5,
-          ease: "power3.inOut",
-          onComplete: () => {
-            isAnimating.current = false;
-          },
-        });
-      } else {
-        gsap.to($root.current.position, {
-          x: slideIndex % 2 !== 0 ? -100 : 100,
-          duration: 1.5,
-          ease: "power3.inOut",
-          onComplete: () => {
-            isAnimating.current = false;
-          },
-        });
-        gsap.to($root.current.scale, {
-          x: 0,
-          y: 0,
-          duration: 1.5,
-          ease: "power3.inOut",
-          onComplete: () => {
-            isAnimating.current = false;
-          },
-        });
-      }
+      gsap.set($root.current.position, {
+        x: slideIndex === index ? 0 : -40,
+      });
+      gsap.set($root.current.scale, {
+        y: slideIndex === index ? 1 : 0,
+      });
     }
-  }, [slideIndex, isAnimating]);
+  }, [slideIndex]);
 
   /*------------------------------
   Hover effect
@@ -94,23 +55,12 @@ const CarouselItem = ({
     });
   }, [hover, isActive]);
 
-  const handleClose = (e) => {
-    e.stopPropagation();
-    if (!isActive) return;
-    setActivePlane(null);
-    setHover(false);
-    clearTimeout(timeoutID.current);
-    timeoutID.current = setTimeout(() => {
-      setCloseActive(false);
-    }, 1500); // The duration of this timer depends on the duration of the plane's closing animation.
-  };
-
   return (
     <group
       ref={$root}
       onClick={() => {
         setActivePlane(index);
-        setClickedIndex(index);
+        setIsClickedIndex(index);
       }}
       onPointerEnter={() => setHover(true)}
       onPointerLeave={() => setHover(false)}
@@ -119,18 +69,8 @@ const CarouselItem = ({
         width={width}
         height={height}
         texture={item.image}
-        active={isActive}
-        hover={hover}
         router={router}
-        index={index}
       />
-
-      {isCloseActive ? (
-        <mesh position={[0, 0, 0.01]} onClick={handleClose}>
-          <planeGeometry args={[viewport.width, viewport.height]} />
-          <meshBasicMaterial transparent={true} opacity={0} color={"red"} />
-        </mesh>
-      ) : null}
     </group>
   );
 };
