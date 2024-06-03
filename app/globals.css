@@ -75,13 +75,13 @@
   }
   body {
     @apply bg-background text-foreground;
-    overflow: hidden;
   }
 
   canvas {
     height: 100%;
   }
-  /* width */
+
+  /*  ScrollBar width */
   ::-webkit-scrollbar {
     width: 0px;
     background: transparent;
