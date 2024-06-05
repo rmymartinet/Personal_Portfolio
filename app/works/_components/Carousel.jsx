@@ -10,8 +10,8 @@ import CarouselItem from "./CarouselItems";
 Plane Settings
 ------------------------------*/
 const planeSettings = {
-  width: 2.5,
-  height: 2.5,
+  width: 3,
+  height: 3,
 };
 
 /*------------------------------
@@ -36,7 +36,6 @@ const Carousel = () => {
   const { viewport } = useThree();
 
   const progress = useRef(0);
-  const speedWheel = 1;
   const $items = useMemo(() => {
     if ($root) return $root.children;
   }, [$root]);

@@ -1,7 +1,8 @@
 import { useNavigationStore } from "@/stateStore/Navigation";
 import { useIsActiveStore } from "@/stateStore/isActive";
+import { useIsHoverStore } from "@/stateStore/isHover";
 import gsap from "gsap";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Plane from "./Plane";
 
 const CarouselItem = ({
@@ -15,14 +16,14 @@ const CarouselItem = ({
   router,
 }) => {
   const $root = useRef();
-  const [hover, setHover] = useState(false);
   const { isActive, setIsActive } = useIsActiveStore();
   const { setIsClickedIndex } = useNavigationStore();
+  const { isHover, setIsHover } = useIsHoverStore();
 
   useEffect(() => {
     if (activePlane === index) {
       setIsActive(true);
-      setHover(false);
+      setIsHover(false);
     }
   }, [activePlane, index]);
 
@@ -46,14 +47,14 @@ const CarouselItem = ({
   Hover effect
   ------------------------------*/
   useEffect(() => {
-    const hoverScale = hover && !isActive ? 1.1 : 1;
+    const hoverScale = isHover && !isActive ? 1.1 : 1;
     gsap.to($root.current.scale, {
       x: hoverScale,
       y: hoverScale,
       duration: 0.5,
       ease: "power3.out",
     });
-  }, [hover, isActive]);
+  }, [isHover, isActive]);
 
   return (
     <group
@@ -62,8 +63,8 @@ const CarouselItem = ({
         setActivePlane(index);
         setIsClickedIndex(index);
       }}
-      onPointerEnter={() => setHover(true)}
-      onPointerLeave={() => setHover(false)}
+      onPointerEnter={() => setIsHover(true)}
+      onPointerLeave={() => setIsHover(false)}
     >
       <Plane
         width={width}
