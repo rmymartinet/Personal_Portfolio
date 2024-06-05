@@ -15,11 +15,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 /**
  * !TODO : Add animation to number slide in relation with de carousel
+ * !TODO : Overflow hidden temporarly maybe better solution ?
  */
 
 export default function Works() {
   const { isClicked } = useBackNavigationStore();
-
   const { isClickedIndex } = useNavigationStore();
   const { isHover } = useIsHoverStore();
   const { isActive } = useIsActiveStore();
@@ -99,8 +99,17 @@ export default function Works() {
     return () => clearTimeout(timeoutId);
   }, [isClicked]);
 
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
+
   return (
-    <main className="relative h-screen w-full">
+    <main className="relative h-screen w-full overflow-hidden">
       <div className="absolute bottom-5 right-5 transform -translate-x-1/2 -translate-y-1/2 z-[-10] text-9xl uppercase text-black">
         {`0${slideIndex + 1}`}
       </div>
