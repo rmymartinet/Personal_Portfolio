@@ -1,4 +1,3 @@
-import { useNavigationStore } from "@/stateStore/Navigation";
 import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useRouter } from "next/navigation";
@@ -25,16 +24,12 @@ gsap.defaults({
 /*------------------------------
 Carousel
 ------------------------------*/
-const Carousel = () => {
+const Carousel = ({ slideIndex, setSlideIndex }) => {
   const router = useRouter();
   const [$root, setRoot] = useState();
   const [activePlane, setActivePlane] = useState(null);
-  const { isClickedIndex } = useNavigationStore();
-  const isClickedIndexIsNull = isClickedIndex === null ? 0 : isClickedIndex;
-  const [slideIndex, setSlideIndex] = useState(isClickedIndexIsNull);
   let isAnimating = useRef(false);
   const { viewport } = useThree();
-
   const progress = useRef(0);
   const $items = useMemo(() => {
     if ($root) return $root.children;

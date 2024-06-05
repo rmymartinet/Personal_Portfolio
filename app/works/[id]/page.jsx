@@ -39,6 +39,10 @@ export default function Work() {
     router.back();
   };
 
+  /*---------------
+Initial Animaiton infosContent  
+----------------- */
+
   useGSAP(() => {
     const h1 = infosContentRef.current.querySelector("h1");
     const subtitle = infosContentRef.current.querySelector("span");
@@ -129,7 +133,10 @@ export default function Work() {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <div ref={infosContentRef} className="">
+        <div ref={infosContentRef}>
+          <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 text-white flex items-center justify-center uppercase text-bold text-xl">
+            scroll down
+          </div>
           <div
             onClick={handleClickBack}
             className="absolute top-[10%] left-1/2 transform -translate-x-1/2 text-white text-2xl z-10"
@@ -137,10 +144,10 @@ export default function Work() {
             Back
           </div>
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-2xl z-10 gap-10 flex flex-col items-center justify-center">
-            <h1 className="text-7xl uppercase font-bold">
+            <h1 className="text-9xl uppercase font-bold">
               {images[isClickedIndex].title}
             </h1>
-            <span className="text-2xl">{images[isClickedIndex].subtitle}</span>
+            <span className="text-4xl">{images[isClickedIndex].subtitle}</span>
           </div>
         </div>
         <div ref={imgContainerRef} className="relative w-full h-full">
@@ -184,7 +191,7 @@ export default function Work() {
             key={index}
             className="h-screen flex flex-col items-center gap-20 justify-center text-center"
           >
-            <h1 className="text-4xl">{title}</h1>
+            <h1 className="text-2xl">{title}</h1>
             <p>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus
               ullam atque dolorem quia modi assumenda ab, at vero odit
