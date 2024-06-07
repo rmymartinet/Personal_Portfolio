@@ -26,6 +26,7 @@ export default function Works() {
   const [showImage, setShowImage] = useState(false);
   const infosRef = useRef();
   const sceneContainer = useRef();
+  const slideIndexRef = useRef();
   const isClickedIndexIsNull = isClickedIndex === null ? 0 : isClickedIndex;
   const [slideIndex, setSlideIndex] = useState(isClickedIndexIsNull);
 
@@ -69,12 +70,28 @@ export default function Works() {
           ease: "power2.out",
         }
       );
+      animation = gsap.fromTo(
+        slideIndexRef.current,
+        {
+          opacity: 0,
+        },
+        {
+          delay: 1,
+          opacity: 1,
+          duration: 1,
+          ease: "power2.out",
+        }
+      );
     } else {
       if (animation) {
         animation.kill();
       }
 
       gsap.to(infosRef.current, {
+        opacity: 0,
+        duration: 0,
+      });
+      gsap.to(slideIndexRef.current, {
         opacity: 0,
         duration: 0,
       });
@@ -110,7 +127,17 @@ export default function Works() {
 
   return (
     <main className="relative h-screen w-full overflow-hidden">
-      <div className="absolute bottom-5 right-5 transform -translate-x-1/2 -translate-y-1/2 z-[-10] text-9xl uppercase text-black">
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px]">
+        <img
+          className="w-full h-full object-cover"
+          src="./images/car.jpg"
+          alt=""
+        />
+      </div>
+      <div
+        ref={slideIndexRef}
+        className="absolute bottom-5 right-5 transform -translate-x-1/2 -translate-y-1/2 z-[-10] text-9xl uppercase text-black"
+      >
         {`0${slideIndex + 1}`}
       </div>
       {showImage && (
