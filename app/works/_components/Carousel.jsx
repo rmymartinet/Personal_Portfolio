@@ -24,7 +24,7 @@ gsap.defaults({
 /*------------------------------
 Carousel
 ------------------------------*/
-const Carousel = ({ slideIndex, setSlideIndex }) => {
+const Carousel = ({ isRender, slideIndex, setSlideIndex }) => {
   const router = useRouter();
   const [$root, setRoot] = useState();
   const [activePlane, setActivePlane] = useState(null);
@@ -78,10 +78,10 @@ const Carousel = ({ slideIndex, setSlideIndex }) => {
     if (progress.current > 0 && slideIndex < $items.length - 1) {
       hideSlide(slideIndex);
       showSlide(slideIndex + 1);
-      setSlideIndex(slideIndex + 1);
+      isRender && setSlideIndex(slideIndex + 1);
     } else if (progress.current < 0 && slideIndex > 0) {
       hideSlide(slideIndex);
-      setSlideIndex(slideIndex - 1);
+      isRender && setSlideIndex(slideIndex - 1);
       showSlide(slideIndex - 1);
     }
   };
