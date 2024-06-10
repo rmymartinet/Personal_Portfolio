@@ -41,7 +41,7 @@ const Plane = ({ hover, router, texture, width, height, active, ...props }) => {
       $mesh.current.material.uniforms.uZoomScale.value.y =
         viewport.height / height;
 
-      if (isActive === true) {
+      if (isActive === true && isClicked === false) {
         gsap.to($mesh.current.material.uniforms.uProgress, {
           value: isActive ? 1 : 0,
           duration: 1.7,
@@ -70,7 +70,6 @@ const Plane = ({ hover, router, texture, width, height, active, ...props }) => {
   --------------------*/
 
       if (isClicked === true && isActive === false) {
-        setIsClicked(false);
         gsap.from($mesh.current.material.uniforms.uProgress, {
           value: 1,
           duration: 1.7,
@@ -80,6 +79,9 @@ const Plane = ({ hover, router, texture, width, height, active, ...props }) => {
           value: 0,
           duration: 1.7,
           ease: "power2.inOut,",
+          onComplete: () => {
+            setIsClicked(false);
+          },
         });
         gsap.from($mesh.current.material.uniforms.uRes.value, {
           x: viewport.width,

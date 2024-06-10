@@ -1,5 +1,6 @@
 "use client";
 
+import { useWorkNavigation } from "@/stateStore/useWorkNavigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRouter } from "next/navigation";
@@ -15,6 +16,7 @@ export default function MyApp() {
   const fixedImageRef = useRef(null);
   const fixedImageRef2 = useRef(null);
   const lineRef2 = useRef(null);
+  const { work } = useWorkNavigation();
 
   /**
    * !TODO Ajouter le fais que l'on ne puisse pas scroller entre les animations
@@ -171,10 +173,12 @@ export default function MyApp() {
                 src="./images/r.jpg"
               />
             </div>
-            <div className="px-10 h-full grid grid-col-2 items-end justify-center">
-              <div className="flex gap-32">
-                <p>About</p>
-                <div className="flex flex-col gap-5 px-32 leading-5">
+            <div className="px-10 h-full flex flex-col gap-y-10 justify-center">
+              <div className="flex">
+                <p className="text-md uppercase w-1/6 flex-0.5 opacity-40">
+                  [ About ]
+                </p>
+                <div className="flex flex-col gap-5 px-24 leading-5 flex-1">
                   <p>
                     Hey there! I'm a Front-end developer, specializing in React.
                     Always eager to learn and explore, I'm a true adventurer,
@@ -195,16 +199,23 @@ export default function MyApp() {
                   </p>
                 </div>
               </div>
-              <div className="flex gap-32">
-                <p>Contact</p>
-                <div className="flex gap-10 px-32 justify-between">
-                  <p>Instagram</p>
-                  <p>LinkedIn</p>
-                  <p className="mx-20">Email</p>
+              <div className="flex">
+                <p className="w-1/6 text-md uppercase flex-0.5 opacity-40">
+                  [ Contact ]
+                </p>
+                <div className="flex px-24 gap-10 flex-1 justify-between">
+                  <div className="flex gap-10">
+                    <p>Instagram</p>
+                    <p>LinkedIn</p>
+                  </div>
+                  <p>Email</p>
                 </div>
               </div>
-              <div>
-                <h1 className="text-7xl tracking-tight uppercase font-light">
+              <div className="absolute py-5 bottom-0">
+                <h1
+                  className="tracking-tight uppercase font-light"
+                  style={{ fontSize: "4.3vw" }}
+                >
                   martinet rémy 2024 ®
                 </h1>
                 <p>{`Local ${time.hour} : ${time.minutes}`}</p>
@@ -233,8 +244,11 @@ export default function MyApp() {
                 className="absolute top-0 left-0 w-full h-0 bg-white"
               >
                 <img
-                  className="object-cover h-full w-full"
-                  src="./images/r.jpg"
+                  className="h-full w-full object-cover"
+                  src={`/images/${work}.jpg`}
+                  alt=""
+                  rel="preload"
+                  as="image"
                 />
               </div>
             </div>

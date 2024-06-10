@@ -1,10 +1,12 @@
 "use client";
 
 import images from "@/app/data/data";
+import Nav from "@/components/Nav";
 import { useBackNavigationStore } from "@/stateStore/BackNavigation";
 import { useNavigationStore } from "@/stateStore/Navigation";
 import { useIsActiveStore } from "@/stateStore/isActive";
 import { useIsHoverStore } from "@/stateStore/isHover";
+import { useWorkNavigation } from "@/stateStore/useWorkNavigation";
 import { Canvas } from "@react-three/fiber";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -33,6 +35,7 @@ export default function Works() {
   const [slideIndex, setSlideIndex] = useState(isClickedIndexIsNull);
   const [isRender, setIsRender] = useState(false);
   const router = useRouter();
+  const { setWork, work } = useWorkNavigation();
 
   /*-------------
   Overflow Hidden to body for the slide animation
@@ -147,19 +150,13 @@ export default function Works() {
     return () => clearTimeout(timeoutId);
   }, [isClicked]);
 
-  const handleClick = () => {
-    router.push("/");
-  };
-
+  useEffect(() => {
+    setWork(slideIndex);
+  }, [slideIndex, setWork]);
   return (
     <>
       <main className="relative h-screen w-full overflow-hidden">
-        <div
-          onClick={() => handleClick()}
-          className="absolute top-1/4 left-1/4 text-2xl uppercase z-50"
-        >
-          (back)
-        </div>
+        <Nav />
         <div ref={lineRef} className="absolute top-0 flex w-full h-screen z-0">
           <div className="bg-white  left-0 w-1/4  flex-1 shadow-xl"></div>
           <div className="bg-white  left-[25%] w-1/4  flex-1 shadow-xl"></div>
@@ -205,7 +202,7 @@ export default function Works() {
             className="absolute top-[72.5%] left-1/2 transform -translate-x-1/2 -translate-y-1/2  w-[400px] pl-6 pt-2 pb-2 mt-7 space-y-1"
             style={{ backgroundColor: "#FCFCFC" }}
           >
-            <p className="font-semibold">Margritt</p>
+            <p className="font-semibold">Title</p>
             <div
               className="flex flex-wrap text-sm gap-2"
               style={{ color: "#969696" }}
@@ -215,7 +212,7 @@ export default function Works() {
               <p>Role : FullStack dev & Motion</p>
               <p>Type : Portfolio</p>
               <p>|</p>
-              <p>Client : Margritt</p>
+              <p>Client : Someone</p>
             </div>
           </div>
         </div>

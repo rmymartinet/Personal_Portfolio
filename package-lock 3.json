@@ -20,7 +20,6 @@
         "react-dom": "^18",
         "react-use": "^17.5.0",
         "split-type": "^0.3.4",
-        "styled-jsx": "^5.1.6",
         "tailwind-merge": "^2.3.0",
         "tailwindcss-animate": "^1.0.7",
         "three": "^0.164.1",
@@ -4389,28 +4388,6 @@
         "node": "^10 || ^12 || >=14"
       }
     },
-    "node_modules/next/node_modules/styled-jsx": {
-      "version": "5.1.1",
-      "resolved": "https://registry.npmjs.org/styled-jsx/-/styled-jsx-5.1.1.tgz",
-      "integrity": "sha512-pW7uC1l4mBZ8ugbiZrcIsiIvVx1UmTfw7UkC3Um2tmfUq9Bhk8IiyEIPl6F8agHgjzku6j0xQEZbfA5uSgSaCw==",
-      "dependencies": {
-        "client-only": "0.0.1"
-      },
-      "engines": {
-        "node": ">= 12.0.0"
-      },
-      "peerDependencies": {
-        "react": ">= 16.8.0 || 17.x.x || ^18.0.0-0"
-      },
-      "peerDependenciesMeta": {
-        "@babel/core": {
-          "optional": true
-        },
-        "babel-plugin-macros": {
-          "optional": true
-        }
-      }
-    },
     "node_modules/normalize-path": {
       "version": "3.0.0",
       "resolved": "https://registry.npmjs.org/normalize-path/-/normalize-path-3.0.0.tgz",
@@ -5724,9 +5701,9 @@
       }
     },
     "node_modules/styled-jsx": {
-      "version": "5.1.6",
-      "resolved": "https://registry.npmjs.org/styled-jsx/-/styled-jsx-5.1.6.tgz",
-      "integrity": "sha512-qSVyDTeMotdvQYoHWLNGwRFJHC+i+ZvdBRYosOFgC+Wg1vx4frN2/RG/NA7SYqqvKNLf39P2LSRA2pu6n0XYZA==",
+      "version": "5.1.1",
+      "resolved": "https://registry.npmjs.org/styled-jsx/-/styled-jsx-5.1.1.tgz",
+      "integrity": "sha512-pW7uC1l4mBZ8ugbiZrcIsiIvVx1UmTfw7UkC3Um2tmfUq9Bhk8IiyEIPl6F8agHgjzku6j0xQEZbfA5uSgSaCw==",
       "dependencies": {
         "client-only": "0.0.1"
       },
@@ -5734,7 +5711,7 @@
         "node": ">= 12.0.0"
       },
       "peerDependencies": {
-        "react": ">= 16.8.0 || 17.x.x || ^18.0.0-0 || ^19.0.0-0"
+        "react": ">= 16.8.0 || 17.x.x || ^18.0.0-0"
       },
       "peerDependenciesMeta": {
         "@babel/core": {
@@ -6404,9 +6381,9 @@
       "dev": true
     },
     "node_modules/yaml": {
-      "version": "2.4.5",
-      "resolved": "https://registry.npmjs.org/yaml/-/yaml-2.4.5.tgz",
-      "integrity": "sha512-aBx2bnqDzVOyNKfsysjA2ms5ZlnjSAW2eG3/L5G/CSujfjLJTJsEw1bGw8kCf04KodQWk1pxlGnZ56CRxiawmg==",
+      "version": "2.4.3",
+      "resolved": "https://registry.npmjs.org/yaml/-/yaml-2.4.3.tgz",
+      "integrity": "sha512-sntgmxj8o7DE7g/Qi60cqpLBA3HG3STcDA0kO+WfB05jEKhZMbY7umNm2rBpQvsmZ16/lPXCJGW2672dgOUkrg==",
       "bin": {
         "yaml": "bin.mjs"
       },

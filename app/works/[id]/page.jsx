@@ -34,8 +34,8 @@ export default function Work() {
   };
 
   const handleClickBack = async () => {
-    await preloadImage(images[isClickedIndex].image);
     setIsClicked(true);
+    await preloadImage(images[isClickedIndex].image);
     router.back();
   };
 
@@ -138,12 +138,12 @@ Initial Animaiton infosContent
             scroll down
           </div>
           <div
-            onClick={handleClickBack}
-            className="absolute top-[10%] left-1/2 transform -translate-x-1/2 text-white text-2xl z-10"
+            onClick={() => handleClickBack()}
+            className="absolute top-0 left-0 p-10 uppercase text-white text-2xl z-10"
           >
-            Back
+            (Works)
           </div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-2xl z-10 gap-10 flex flex-col items-center justify-center">
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-2xl z-10 gap-10 flex flex-col items-center justify-center overflow-hidden">
             <h1 className="text-9xl uppercase font-bold">
               {images[isClickedIndex].title}
             </h1>

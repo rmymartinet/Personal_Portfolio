@@ -17,9 +17,11 @@ export const textSplitTransition = (el, yposition = 200) => {
 export const textGsapTransition = (el) => {
   const tl = gsap.timeline();
 
-  tl.from(el, { y: 200, duration: 1, ease: "power2.Out" }).to(el, {
+  tl.from(el, { y: 200, duration: 1, ease: "power2.Out", rotateX: 90 }).to(el, {
+    delay: 1,
     y: 0,
-    duration: 1,
+    rotateX: 0,
+    duration: 2,
     ease: "power2.Out",
   });
 
