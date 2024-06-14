@@ -1,16 +1,16 @@
 "use client";
 
 import images from "@/app/data/data";
+import Background from "@/components/Background";
+import InfosWork from "@/components/InfosWork";
 import Nav from "@/components/Nav";
-import { useBackNavigationStore } from "@/stateStore/BackNavigation";
 import { useNavigationStore } from "@/stateStore/Navigation";
-import { useIsActiveStore } from "@/stateStore/isActive";
 import { useIsHoverStore } from "@/stateStore/isHover";
 import { useWorkNavigation } from "@/stateStore/useWorkNavigation";
 import { Canvas } from "@react-three/fiber";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Suspense, useEffect, useRef, useState } from "react";
 import Carousel from "./_components/Carousel";
 
@@ -22,20 +22,18 @@ gsap.registerPlugin(ScrollTrigger);
  */
 
 export default function Works() {
-  const { isClicked } = useBackNavigationStore();
   const { isClickedIndex } = useNavigationStore();
   const { isHover } = useIsHoverStore();
-  const { isActive } = useIsActiveStore();
   const [showImage, setShowImage] = useState(false);
-  const infosRef = useRef();
+
   const sceneContainer = useRef();
   const slideIndexRef = useRef();
-  const lineRef = useRef();
+  const infosRef = useRef();
+
   const isClickedIndexIsNull = isClickedIndex === null ? 0 : isClickedIndex;
   const [slideIndex, setSlideIndex] = useState(isClickedIndexIsNull);
   const [isRender, setIsRender] = useState(false);
-  const router = useRouter();
-  const { setWork, work } = useWorkNavigation();
+  const { setWork } = useWorkNavigation();
 
   /*-------------
   Overflow Hidden to body for the slide animation
@@ -84,91 +82,23 @@ export default function Works() {
     }
   }, [isHover]);
 
-  /*----------------
-  Animations infos
-  ------------------ */
-
-  useEffect(() => {
-    let animation;
-
-    if (!isActive) {
-      animation = gsap.fromTo(
-        infosRef.current,
-        {
-          opacity: 0,
-        },
-        {
-          delay: 1,
-          opacity: 1,
-          duration: 1,
-          ease: "power2.out",
-        }
-      );
-      animation = gsap.fromTo(
-        slideIndexRef.current,
-        {
-          opacity: 0,
-        },
-        {
-          delay: 1,
-          opacity: 1,
-          duration: 1,
-          ease: "power2.out",
-        }
-      );
-    } else {
-      if (animation) {
-        animation.kill();
-      }
-
-      gsap.to(infosRef.current, {
-        opacity: 0,
-        duration: 0,
-      });
-      gsap.to(slideIndexRef.current, {
-        opacity: 0,
-        duration: 0,
-      });
-    }
-    return () => {
-      if (animation) {
-        animation.kill();
-      }
-    };
-  }, [isActive]);
-
-  useEffect(() => {
-    let timeoutId;
-
-    if (isClicked) {
-      setShowImage(true);
-      timeoutId = setTimeout(() => {
-        setShowImage(false);
-      }, 500);
-    }
-
-    return () => clearTimeout(timeoutId);
-  }, [isClicked]);
-
   useEffect(() => {
     setWork(slideIndex);
   }, [slideIndex, setWork]);
+
   return (
     <>
       <main className="relative h-screen w-full overflow-hidden">
         <Nav />
-        <div ref={lineRef} className="absolute top-0 flex w-full h-screen z-0">
-          <div className="bg-white  left-0 w-1/4  flex-1 shadow-xl"></div>
-          <div className="bg-white  left-[25%] w-1/4  flex-1 shadow-xl"></div>
-          <div className="bg-white  left-[50%] w-1/4  flex-1 shadow-xl"></div>
-          <div className="bg-white  left-[75%] w-1/4  flex-1 shadow-xl"></div>
-        </div>
+        <Background />
         {!isRender && (
           <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px]">
-            <img
+            <Image
               className="w-full h-full object-cover"
-              src="./images/city.jpg"
+              src="/images/margritt.jpg"
               alt=""
+              layout="fill"
+              objectFit="cover"
             />
           </div>
         )}
@@ -180,7 +110,7 @@ export default function Works() {
         </div>
         {showImage && (
           <img
-            className="absolute w-full h-full object-cover"
+            className="absolute w-full h-full object-cover z-50"
             src={images[isClickedIndex].image}
             alt=""
             rel="preload"
@@ -197,24 +127,12 @@ export default function Works() {
               />
             </Suspense>
           </Canvas>
-          <div
-            ref={infosRef}
-            className="absolute top-[72.5%] left-1/2 transform -translate-x-1/2 -translate-y-1/2  w-[400px] pl-6 pt-2 pb-2 mt-7 space-y-1"
-            style={{ backgroundColor: "#FCFCFC" }}
-          >
-            <p className="font-semibold">Title</p>
-            <div
-              className="flex flex-wrap text-sm gap-2"
-              style={{ color: "#969696" }}
-            >
-              <p>Year : 2024</p>
-              <p>|</p>
-              <p>Role : FullStack dev & Motion</p>
-              <p>Type : Portfolio</p>
-              <p>|</p>
-              <p>Client : Someone</p>
-            </div>
-          </div>
+          <InfosWork
+            setShowImage={setShowImage}
+            slideIndexRef={slideIndexRef}
+            infosRef={infosRef}
+            slideIndex={slideIndex}
+          />
         </div>
       </main>
     </>
