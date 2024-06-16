@@ -1,7 +1,9 @@
+import { preloadImage } from "@/components/PreloadImg";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRouter } from "next/navigation";
+import SplitType from "split-type";
 
 export function AnimationToWorkPage(lineRef, fixedImageRef, isScrolling) {
   gsap.registerPlugin(ScrollTrigger);
@@ -53,14 +55,13 @@ export function AnimationToWorkPage(lineRef, fixedImageRef, isScrolling) {
               height: "100%",
               duration: 1.5,
               ease: "power2.out",
+              onComplete: async () => {
+                await preloadImage("/images/margritt.jpg");
+                router.push("/works");
+              },
             },
             "0.2"
           );
-
-          // Navigate to /works after the animations complete
-          tl.add(() => {
-            router.push("/works");
-          });
         });
 
         return () => {
@@ -117,3 +118,61 @@ export function AnimationFromWorkPage(lineRef2, fixedImageRef2) {
     };
   });
 }
+
+export const textSplitTransition = (el, yposition = 200) => {
+  const split = new SplitType(el);
+
+  gsap.from(split.chars, {
+    y: yposition,
+    skewX: 50,
+    rotation: 20,
+    duration: 1,
+    stagger: 0.05,
+    ease: "power3.inOut",
+  });
+};
+
+export const textGsapTransition = (el) => {
+  const tl = gsap.timeline();
+
+  tl.from(el, { y: 200, duration: 1, ease: "power2.Out", rotateX: 90 }).to(el, {
+    delay: 1,
+    y: 0,
+    rotateX: 0,
+    duration: 2,
+    ease: "power2.Out",
+  });
+
+  return tl;
+};
+
+export const detailTextSplitTransition = (el, duration = 1) => {
+  const split = new SplitType(el);
+
+  gsap.from(split.chars, {
+    y: 50,
+    rotateX: 90,
+    duration: duration,
+    stagger: 0.01,
+    ease: "power3.inOut",
+  });
+
+  return () => {
+    split.revert();
+  };
+};
+
+export const numberSplitAnimation = (el) => {
+  const split = new SplitType(el);
+
+  gsap.from(split.chars, {
+    x: -200,
+    duration: 1,
+    stagger: 0.05,
+    ease: "power3.inOut",
+  });
+
+  return () => {
+    split.revert();
+  };
+};

@@ -12,6 +12,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { Suspense, useEffect, useRef, useState } from "react";
+import { numberSplitAnimation } from "./_animations/TextAnimation";
 import Carousel from "./_components/Carousel";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -49,7 +50,7 @@ export default function Works() {
   }, []);
 
   /*-------------
-  Render content
+  Display preload image
   -------------- */
 
   useEffect(() => {
@@ -86,55 +87,60 @@ export default function Works() {
     setWork(slideIndex);
   }, [slideIndex, setWork]);
 
+  /*------------
+  SlideIndexRef Animation
+  -----------*/
+
+  useEffect(() => {
+    slideIndexRef.current.textContent = `0${slideIndex + 1}`;
+    const clean = numberSplitAnimation(slideIndexRef.current);
+    return () => {
+      clean();
+    };
+  }, [slideIndex]);
+
   return (
-    <>
-      <main className="relative h-screen w-full overflow-hidden">
-        <Nav />
-        <Background />
-        {!isRender && (
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px]">
-            <Image
-              className="w-full h-full object-cover"
-              src="/images/margritt.jpg"
-              alt=""
-              layout="fill"
-              objectFit="cover"
-            />
-          </div>
-        )}
-        <div
-          ref={slideIndexRef}
-          className="absolute bottom-5 right-5 transform -translate-x-1/2 -translate-y-1/2 text-9xl uppercase text-black"
-        >
-          {`0${slideIndex + 1}`}
-        </div>
-        {showImage && (
-          <img
-            className="absolute w-full h-full object-cover z-50"
-            src={images[isClickedIndex].image}
+    <section className="relative h-screen w-full overflow-hidden">
+      <Nav />
+      <Background />
+      {!isRender && (
+        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[405px] h-[405px]">
+          <Image
+            className="w-full h-full object-cover"
+            src="/images/margritt.jpg"
             alt=""
-            rel="preload"
-            as="image"
-          />
-        )}
-        <div className="w-full h-full">
-          <Canvas ref={sceneContainer}>
-            <Suspense fallback={null}>
-              <Carousel
-                isRender={isRender}
-                slideIndex={slideIndex}
-                setSlideIndex={setSlideIndex}
-              />
-            </Suspense>
-          </Canvas>
-          <InfosWork
-            setShowImage={setShowImage}
-            slideIndexRef={slideIndexRef}
-            infosRef={infosRef}
-            slideIndex={slideIndex}
+            layout="fill"
+            objectFit="cover"
           />
         </div>
-      </main>
-    </>
+      )}
+      <div className="absolute bottom-5 right-5 transform -translate-x-1/2 -translate-y-1/2 text-9xl uppercase text-black overflow-hidden">
+        <h1 ref={slideIndexRef}>{`0${slideIndex + 1}`}</h1>
+      </div>
+      {showImage && (
+        <img
+          className="absolute w-full h-full object-cover z-50"
+          src={images[isClickedIndex].image}
+          alt=""
+        />
+      )}
+      <div className="w-full h-full">
+        <Canvas ref={sceneContainer}>
+          <Suspense fallback={null}>
+            <Carousel
+              isRender={isRender}
+              slideIndex={slideIndex}
+              setSlideIndex={setSlideIndex}
+            />
+          </Suspense>
+        </Canvas>
+        <InfosWork
+          setShowImage={setShowImage}
+          slideIndexRef={slideIndexRef}
+          infosRef={infosRef}
+          slideIndex={slideIndex}
+        />
+      </div>
+    </section>
   );
 }
