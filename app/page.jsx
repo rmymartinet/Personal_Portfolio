@@ -12,6 +12,7 @@ gsap.registerPlugin(ScrollTrigger);
 export default function MyApp() {
   const containerRef = useRef(null);
   const fixedContainerRef = useRef(null);
+  const blinkingTimeRef = useRef(null);
   const [isScrolling, setIsScrolling] = useState(false);
 
   /**
@@ -54,8 +55,17 @@ export default function MyApp() {
     };
   }, []);
 
+  useEffect(() => {
+    gsap.to(blinkingTimeRef.current, {
+      opacity: 0,
+      repeat: -1,
+      yoyo: true,
+      duration: 1,
+    });
+  }, []);
+
   return (
-    <>
+    <main>
       <div onWheel={handleWheel} ref={containerRef}>
         <div
           ref={fixedContainerRef}
@@ -69,40 +79,40 @@ export default function MyApp() {
           >
             <div className="h-screen">
               <Image
-                width={500}
-                height={500}
+                width={700}
+                height={700}
                 className="object-cover h-full w-full"
                 src="/images/r.jpg"
                 alt=""
                 objectFit="cover"
               />
             </div>
-            <div className="px-10 h-full flex flex-col gap-y-10 justify-center">
+            <div className="px-10 h-full flex flex-col gap-y-10 justify-center ">
               <div className="flex">
                 <p className="text-md uppercase w-1/6 flex-0.5 opacity-40">
                   [ About ]
                 </p>
                 <div className="flex flex-col gap-5 px-24 leading-5 flex-1">
                   <p>
-                    Hey there! I &apos m a Front-end developer, specializing in
-                    React. Always eager to learn and explore, I&apos m a true
+                    Hey there! I&apos;m a Front-end developer, specializing in
+                    React. Always eager to learn and explore, I&apos;m a true
                     adventurer, with professional experience in web design and
                     idea creation through my start-up. What I love about this
                     job is the constant evolution.
                   </p>
                   <p>
-                    Hey there! I &apos m a Front-end developer, specializing in
-                    React. Always eager to learn and explore, I&apos m a true
-                    adventurer, with professional experience in web design and
-                    idea creation through my start-up. What I love about this
-                    job is the constant evolution.
+                    My early journey in the tech world has allowed me to
+                    leverage my competitive spirit and passion for quality work.
+                    I always strive to give my best and push my limits. I enjoy
+                    tackling projects or problems that are above my current
+                    skill level because they push me out of my comfort zone and
+                    help me grow. I work on a variety of projects, so feel free
+                    to check out my GitHub.
                   </p>
                   <p>
-                    Hey there! I &apos m a Front-end developer, specializing in
-                    React. Always eager to learn and explore, I&apos m a true
-                    adventurer, with professional experience in web design and
-                    idea creation through my start-up. What I love about this
-                    job is the constant evolution.
+                    I have also started a YouTube channel and an Instagram
+                    account where I share various topics and projects about my
+                    coding world.
                   </p>
                 </div>
               </div>
@@ -112,20 +122,26 @@ export default function MyApp() {
                 </p>
                 <div className="flex px-24 gap-10 flex-1 justify-between">
                   <div className="flex gap-10">
-                    <p>Instagram</p>
+                    <p>GitHub</p>
                     <p>LinkedIn</p>
+                    <p>Youtube</p>
+                    <p>Instagram</p>
                   </div>
                   <p>Email</p>
                 </div>
               </div>
               <div className="absolute py-5 bottom-0">
                 <h1
-                  className="tracking-tight uppercase font-light"
+                  className="tracking-tight uppercase font-light "
                   style={{ fontSize: "4.3vw" }}
                 >
                   martinet rémy 2024 ®
                 </h1>
-                <p>{`Local ${time.hour} : ${time.minutes}`}</p>
+                <div className="flex gap-2 text-md">
+                  <p>{`Local ${time.hour}`}</p>
+                  <span ref={blinkingTimeRef}>:</span>
+                  <p>{time.minutes}</p>
+                </div>
               </div>
             </div>
             <WhiteDivBottom isScrolling={isScrolling} />
@@ -135,6 +151,6 @@ export default function MyApp() {
       </div>
       <div className="h-screen"></div>
       <div className="h-screen"></div>
-    </>
+    </main>
   );
 }
