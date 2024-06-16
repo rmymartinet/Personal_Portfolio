@@ -3,20 +3,12 @@ import { useWorkNavigation } from "@/stateStore/useWorkNavigation";
 import gsap from "gsap";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
+import { preloadImage } from "./PreloadImg";
 
 const Nav = () => {
-  const { work } = useWorkNavigation();
   const router = useRouter();
   const navRef = useRef();
-
-  const preloadImage = (src) => {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.src = src;
-      img.onload = resolve;
-      img.onerror = reject;
-    });
-  };
+  const { work } = useWorkNavigation();
 
   const handleClickHome = async () => {
     await preloadImage(`/images/${work}.jpg`);
