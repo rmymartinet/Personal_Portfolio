@@ -3,6 +3,7 @@
 import DynamicImageContainer from "@/components/DynamicImageContainer";
 import DynamicTextContainer from "@/components/DynamicTextContainer";
 import { preloadImage } from "@/components/PreloadImg";
+import { textGsapTransition } from "@/lib/Animation";
 import { useBackNavigationStore } from "@/stateStore/BackNavigation";
 import { useNavigationStore } from "@/stateStore/Navigation";
 import { useGSAP } from "@gsap/react";
@@ -13,7 +14,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import images from "../../data/data";
-import { textGsapTransition } from "../_animations/TextAnimation";
 
 gsap.registerPlugin(ScrollTrigger, Flip, Observer);
 

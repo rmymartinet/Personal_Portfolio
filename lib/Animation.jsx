@@ -56,7 +56,7 @@ export function AnimationToWorkPage(lineRef, fixedImageRef, isScrolling) {
               duration: 1.5,
               ease: "power2.out",
               onComplete: async () => {
-                await preloadImage("/images/margritt.jpg");
+                await preloadImage("/images/margritt/margritt.jpg");
                 router.push("/works");
               },
             },

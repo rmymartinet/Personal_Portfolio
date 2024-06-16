@@ -4,6 +4,7 @@ import images from "@/app/data/data";
 import Background from "@/components/Background";
 import InfosWork from "@/components/InfosWork";
 import Nav from "@/components/Nav";
+import { numberSplitAnimation } from "@/lib/Animation";
 import { useNavigationStore } from "@/stateStore/Navigation";
 import { useIsHoverStore } from "@/stateStore/isHover";
 import { useWorkNavigation } from "@/stateStore/useWorkNavigation";
@@ -12,7 +13,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { Suspense, useEffect, useRef, useState } from "react";
-import { numberSplitAnimation } from "./_animations/TextAnimation";
 import Carousel from "./_components/Carousel";
 
 gsap.registerPlugin(ScrollTrigger);

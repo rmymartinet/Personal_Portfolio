@@ -5,7 +5,7 @@ import { useIsActiveStore } from "@/stateStore/isActive";
 import gsap from "gsap";
 import { useEffect, useRef } from "react";
 
-import { detailTextSplitTransition } from "@/app/works/_animations/TextAnimation";
+import { detailTextSplitTransition } from "@/lib/Animation";
 
 const InfosWork = ({ setShowImage, slideIndexRef, infosRef, slideIndex }) => {
   const { isActive } = useIsActiveStore();
@@ -113,10 +113,7 @@ const InfosWork = ({ setShowImage, slideIndexRef, infosRef, slideIndex }) => {
       style={{ backgroundColor: "#FCFCFC" }}
     >
       <p className="font-semibold">{image.title}</p>
-      <div
-        className="flex flex-wrap text-sm gap-2 overflow-hidden"
-        style={{ color: "#969696" }}
-      >
+      <div className="flex flex-wrap text-sm gap-2 overflow-hidden opacity-40">
         <p className="flex gap-2 overflow-hidden">
           Year : <span ref={p1}> {image.year} </span>
         </p>

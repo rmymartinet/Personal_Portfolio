@@ -132,13 +132,14 @@ export default function MyApp() {
               </div>
               <div className="absolute py-5 bottom-0">
                 <h1
-                  className="tracking-tight uppercase font-light "
+                  className="tracking-tight uppercase"
                   style={{ fontSize: "4.3vw" }}
                 >
                   martinet rémy 2024 ®
                 </h1>
-                <div className="flex gap-2 text-md">
-                  <p>{`Local ${time.hour}`}</p>
+                <div className=" px-2 flex gap-2 text-md opacity-40">
+                  <p>{`Local`}</p>
+                  <p className="ml-2">{time.hour}</p>
                   <span ref={blinkingTimeRef}>:</span>
                   <p>{time.minutes}</p>
                 </div>
