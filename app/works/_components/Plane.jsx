@@ -70,35 +70,50 @@ const Plane = ({ hover, router, texture, width, height, active, ...props }) => {
   --------------------*/
 
       if (isClicked === true && isActive === false) {
-        gsap.from($mesh.current.material.uniforms.uProgress, {
-          value: 1,
-          duration: 1.7,
-          ease: "power2.inOut,",
-        });
-        gsap.to($mesh.current.material.uniforms.uProgress, {
-          value: 0,
-          duration: 1.7,
-          ease: "power2.inOut,",
-          onComplete: () => {
-            setIsClicked(false);
-          },
-        });
-        gsap.from($mesh.current.material.uniforms.uRes.value, {
-          x: viewport.width,
-          y: viewport.height,
-          duration: 1.7,
-          ease: "power2.inOut,",
-        });
+        let time = setTimeout(() => {
+          gsap.from($mesh.current.material.uniforms.uProgress, {
+            value: 1,
+            duration: 1.7,
+            ease: "power2.inOut,",
+          });
+          gsap.to($mesh.current.material.uniforms.uProgress, {
+            value: 0,
+            duration: 1.7,
+            ease: "power2.inOut,",
+            onComplete: () => {
+              setIsClicked(false);
+            },
+          });
+          gsap.from($mesh.current.material.uniforms.uRes.value, {
+            x: viewport.width,
+            y: viewport.height,
+            duration: 1.7,
+            ease: "power2.inOut,",
+          });
 
-        gsap.to($mesh.current.material.uniforms.uRes.value, {
-          x: width,
-          y: height,
-          duration: 1.7,
-          ease: "power2.inOut,",
-        });
+          gsap.to($mesh.current.material.uniforms.uRes.value, {
+            x: width,
+            y: height,
+            duration: 1.7,
+            ease: "power2.inOut,",
+          });
+        }, 500);
+
+        return () => {
+          clearTimeout(time);
+        };
       }
     }
-  }, [viewport, isActive, isClicked]);
+  }, [
+    viewport,
+    isActive,
+    isClicked,
+    isClickedIndex,
+    setIsActive,
+    router,
+    width,
+    height,
+  ]);
 
   const shaderArgs = useMemo(
     () => ({

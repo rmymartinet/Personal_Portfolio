@@ -25,7 +25,7 @@ const CarouselItem = ({
       setIsActive(true);
       setIsHover(false);
     }
-  }, [activePlane, index]);
+  }, [activePlane, index, setIsActive, setIsHover]);
 
   /*------------------------------
   Animation slide
@@ -41,7 +41,7 @@ const CarouselItem = ({
         y: slideIndex === index ? 1 : 0,
       });
     }
-  }, [slideIndex]);
+  }, [slideIndex, index]);
 
   /*------------------------------
   Hover effect
