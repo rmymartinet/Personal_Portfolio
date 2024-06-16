@@ -1,6 +1,8 @@
 "use client";
 
-import images from "@/app/data/data";
+import DynamicImageContainer from "@/components/DynamicImageContainer";
+import DynamicTextContainer from "@/components/DynamicTextContainer";
+import { preloadImage } from "@/components/PreloadImg";
 import { useBackNavigationStore } from "@/stateStore/BackNavigation";
 import { useNavigationStore } from "@/stateStore/Navigation";
 import { useGSAP } from "@gsap/react";
@@ -10,6 +12,7 @@ import { Observer } from "gsap/Observer";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
+import images from "../../data/data";
 import { textGsapTransition } from "../_animations/TextAnimation";
 
 gsap.registerPlugin(ScrollTrigger, Flip, Observer);
@@ -21,28 +24,31 @@ export default function Work() {
   const textContainerRef = useRef();
   const flipContainerRef = useRef();
   const infosContentRef = useRef();
+  const body = document.body;
+  const bgColor = [
+    "rgb(224 231 255);",
+    "rgb(226 232 240))",
+    "rgb(219 234 254)",
+    "rgb(226 232 240))",
+    "rgb(245 245 245)",
+  ];
+
   const { setIsClicked } = useBackNavigationStore();
   const { isClickedIndex } = useNavigationStore();
 
-  const preloadImage = (src) => {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.src = src;
-      img.onload = resolve;
-      img.onerror = reject;
-    });
-  };
+  const imagesIndex = images[isClickedIndex];
+  const imagesArray = Object.values(imagesIndex).splice(1, 5);
+  const imagesRefs = imagesArray.map(() => useRef(null));
 
   const handleClickBack = async () => {
-    setIsClicked(true);
     await preloadImage(images[isClickedIndex].image);
+    setIsClicked(true);
     router.back();
   };
 
-  /*---------------
-Initial Animaiton infosContent  
------------------ */
-
+  /*--------------
+   Initial Animaiton infosContent 
+   -------------------*/
   useGSAP(() => {
     const h1 = infosContentRef.current.querySelector("h1");
     const subtitle = infosContentRef.current.querySelector("span");
@@ -50,10 +56,9 @@ Initial Animaiton infosContent
     textGsapTransition(subtitle);
   });
 
-  /*---------------
-  Resize the flip container and animate the infos content
-  ----------------- */
-
+  /*------------------------
+  Resize the flip container and animate the infos content 
+  ----------------------------*/
   useEffect(() => {
     gsap.fromTo(
       infosContentRef.current,
@@ -73,7 +78,7 @@ Initial Animaiton infosContent
       x: 30,
       y: 200,
       borderRadius: "2%",
-      width: "40%",
+      width: "50%",
       height: "70%",
       scrollTrigger: {
         trigger: containerRef.current,
@@ -84,21 +89,27 @@ Initial Animaiton infosContent
     });
   }, []);
 
-  /*---------------
-  Animate textContainer and imgContainer
-  ----------------- */
-
   useGSAP(() => {
     const details = gsap.utils.toArray(textContainerRef.current.children);
     const photos = gsap.utils.toArray(imgContainerRef.current.children);
 
-    gsap.set(photos, { yPercent: 101 });
+    gsap.set(photos, {
+      clipPath: "inset(100% 0% 0% 0%)",
+    });
 
     let mm = gsap.matchMedia();
 
     mm.add("(min-width: 600px)", () => {
-      let animations = photos.map((photo) => {
-        let animation = gsap.timeline().to(photo, { yPercent: 0 });
+      let animations = photos.map((photo, index) => {
+        let animation = gsap
+          .timeline()
+          .to(photo, {
+            clipPath: "inset(0% 0% 0% 0%)",
+            ease: "power2.inOut",
+            duration: 5,
+          })
+          .to(images[index], { yPercent: -10, duration: 5 }, 0)
+          .to(body, { backgroundColor: bgColor[index], duration: 10 }, 0);
 
         return animation;
       });
@@ -108,10 +119,10 @@ Initial Animaiton infosContent
 
         ScrollTrigger.create({
           trigger: headline,
-          start: "top 80%",
-          end: "top 40%",
+          start: "top 150%",
+          end: "bottom 10%",
           animation: animations[index],
-          scrub: 1,
+          scrub: 1.5,
         });
       });
 
@@ -147,60 +158,20 @@ Initial Animaiton infosContent
             <h1 className="text-9xl uppercase font-bold">
               {images[isClickedIndex].title}
             </h1>
-            <span className="text-4xl">{images[isClickedIndex].subtitle}</span>
+            <span className="text-2xl">{images[isClickedIndex].subtitle}</span>
           </div>
         </div>
-        <div ref={imgContainerRef} className="relative w-full h-full">
-          <div
-            className="absolute top-0 w-full h-full overflow-hidden"
-            style={{
-              backgroundImage: `url(${images[1].image})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            }}
-          ></div>
-          <div
-            className="absolute top-0 w-full h-full overflow-hidden"
-            style={{
-              backgroundImage: `url(${images[2].image})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            }}
-          ></div>
-          <div
-            className="absolute top-0 w-full h-full overflow-hidden"
-            style={{
-              backgroundImage: `url(${images[1].image})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            }}
-          ></div>
-        </div>
+        <DynamicImageContainer
+          imgContainerRef={imgContainerRef}
+          imagesRefs={imagesRefs}
+          imagesArray={imagesArray}
+        />
       </div>
-      <div className="h-screen"></div>
-      <div className="h-screen"></div>
-      <div
-        ref={textContainerRef}
-        className="absolute right-0 p-20  w-1/2  text-2xl"
-      >
-        {["Title 1", "Title 2", "Title 3"].map((title, index) => (
-          <div
-            key={index}
-            className="h-screen flex flex-col items-center gap-20 justify-center text-center"
-          >
-            <h1 className="text-2xl">{title}</h1>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus
-              ullam atque dolorem quia modi assumenda ab, at vero odit
-              perspiciatis maiores aliquam deserunt error? Asperiores
-              voluptatibus laboriosam rerum dolores qui!
-            </p>
-          </div>
-        ))}
-      </div>
+      <DynamicTextContainer
+        textContainerRef={textContainerRef}
+        imagesRefs={imagesRefs}
+        body={body}
+      />
     </div>
   );
 }
