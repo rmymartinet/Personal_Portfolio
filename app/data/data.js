@@ -1,5 +1,6 @@
 const images = [
   {
+    number: "O1",
     image: "/images/margritt/margritt.jpg",
     img1: "/images/margritt/img1.png",
     img2: "/images/margritt/img2.png",
@@ -7,8 +8,15 @@ const images = [
     img4: "/images/margritt/img4.png",
     img5: "/images/margritt/img5.png",
     title: "Margritt",
-    subtitle:
-      "Margritt is a artist. She wanted a portfolio to showcase her work. She wanted to have a gallery to showcase her work.",
+    clientInfos:
+      "Margritt is a artist. She wanted a portfolio to showcase her work.",
+    brief:
+      "We began by choosing a minimalist design that would highlight her artwork without distractions. I integrated a gallery feature that allowed users to browse through her work effortlessly.",
+    demographic: "Artists",
+    concept: "Minimalist, Clean, Elegant",
+    deliverables1: "❊ Webdesign",
+    deliverables2: "❊ Website",
+    deliverables3: "❊ Motion",
     year: "2024",
     role: "FullStack dev & Motion",
     type: "Portfolio",
