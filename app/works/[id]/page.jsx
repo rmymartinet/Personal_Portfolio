@@ -3,21 +3,23 @@
 import CustomScrollbar from "@/components/CustomScrollBar";
 import DynamicImageContainer from "@/components/DynamicImageContainer";
 import DynamicTextContainer from "@/components/DynamicTextContainer";
-import InfosDetailsWork from "@/components/InfosDetailsWork";
+import InfosIdWork from "@/components/InfosIdWork";
 import Nav from "@/components/Nav";
+import { useBackNavigationStore } from "@/stateStore/BackNavigation";
 import { useNavigationStore } from "@/stateStore/Navigation";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import Flip from "gsap/Flip";
 import { Observer } from "gsap/Observer";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import images from "../../data/data";
 
 gsap.registerPlugin(ScrollTrigger, Flip, Observer);
 
 export default function Work() {
   const { isClickedIndex } = useNavigationStore();
+  const { isClicked } = useBackNavigationStore();
 
   const containerRef = useRef();
   const imgContainerRef = useRef();
@@ -25,6 +27,8 @@ export default function Work() {
   const flipContainerRef = useRef();
   const scrollRef = useRef();
   const intialImageRef = useRef();
+
+  const [isAnimationDone, setIsAnimationDone] = useState(false);
 
   const body = document.body;
   const bgColor = [
@@ -45,7 +49,7 @@ export default function Work() {
   ----------------------------*/
   useEffect(() => {
     gsap.to(flipContainerRef.current, {
-      x: 300,
+      x: 350,
       y: 200,
       borderRadius: "2%",
       width: "60%",
@@ -106,12 +110,48 @@ export default function Work() {
     });
   });
 
+  /*----------------
+  Click Back from Work [id] to Works
+  --------------- */
+  useEffect(() => {
+    if (isClicked && imgContainerRef && imgContainerRef.current !== null) {
+      const imgContainerChildren = gsap.utils.toArray(
+        imgContainerRef.current.children
+      );
+
+      const tl = gsap.timeline();
+
+      tl.to(imgContainerChildren, {
+        yPercent: 100,
+        stagger: 0.1,
+        duration: 0.5,
+        ease: "power3.inOut",
+      }).to(
+        flipContainerRef.current,
+        {
+          x: 0,
+          y: 0,
+          borderRadius: "0%",
+          width: "100%",
+          height: "100%",
+          duration: 1,
+          ease: "power3.inOut",
+          onComplete: () => {
+            setIsAnimationDone(true);
+          },
+        },
+        "-=0.2"
+      );
+    }
+  }, [isClicked, imgContainerRef]);
+
   return (
     <>
       <Nav
         imageIndex={imagesIndex}
-        intialImageRef={intialImageRef}
         flipContainer={flipContainerRef}
+        imgContainerRef={imgContainerRef}
+        isAnimationDone={isAnimationDone}
       />
       <div ref={containerRef}>
         <div
@@ -124,7 +164,7 @@ export default function Work() {
             backgroundRepeat: "no-repeat",
           }}
         >
-          <InfosDetailsWork
+          <InfosIdWork
             image={images[isClickedIndex]}
             containerRef={containerRef}
           />
