@@ -5,6 +5,7 @@ import Background from "@/components/Background";
 import InfosWork from "@/components/InfosWork";
 import Nav from "@/components/Nav";
 import { numberSplitAnimation } from "@/lib/Animation";
+import { useBackNavigationStore } from "@/stateStore/BackNavigation";
 import { useNavigationStore } from "@/stateStore/Navigation";
 import { useIsHoverStore } from "@/stateStore/isHover";
 import { useWorkNavigation } from "@/stateStore/useWorkNavigation";
@@ -24,6 +25,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Works() {
   const { isClickedIndex } = useNavigationStore();
+  const { isClicked } = useBackNavigationStore();
+  const { setWork } = useWorkNavigation();
+
   const { isHover } = useIsHoverStore();
   const [showImage, setShowImage] = useState(false);
 
@@ -34,7 +38,8 @@ export default function Works() {
   const isClickedIndexIsNull = isClickedIndex === null ? 0 : isClickedIndex;
   const [slideIndex, setSlideIndex] = useState(isClickedIndexIsNull);
   const [isRender, setIsRender] = useState(false);
-  const { setWork } = useWorkNavigation();
+
+  const timeOut = [750, 770, 900];
 
   /*-------------
   Overflow Hidden to body for the slide animation
@@ -99,6 +104,23 @@ export default function Works() {
     };
   }, [slideIndex]);
 
+  /*---------------
+  Show Image Animation
+  -----------------*/
+
+  useEffect(() => {
+    let timeoutId;
+
+    if (isClicked) {
+      setShowImage(true);
+      timeoutId = setTimeout(() => {
+        setShowImage(false);
+      }, timeOut[isClickedIndex]);
+    }
+
+    return () => clearTimeout(timeoutId);
+  }, [isClicked]);
+
   return (
     <section className="relative h-screen w-full overflow-hidden">
       <Nav />
@@ -115,7 +137,9 @@ export default function Works() {
         </div>
       )}
       <div className="absolute bottom-5 right-5 transform -translate-x-1/2 -translate-y-1/2 text-9xl uppercase text-black overflow-hidden">
-        <h1 ref={slideIndexRef}>{`0${slideIndex + 1}`}</h1>
+        <h1 className="opacity-0" ref={slideIndexRef}>
+          {`0${slideIndex + 1}`}
+        </h1>
       </div>
       {showImage && (
         <img
