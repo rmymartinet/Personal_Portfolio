@@ -29,7 +29,7 @@ const DynamicImageContainer = ({
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
-      ></div>
+      />
       <div
         ref={imgContainerRef}
         className="relative w-full h-full overflow-hidden"

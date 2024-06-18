@@ -60,7 +60,7 @@ const Plane = ({ hover, router, texture, width, height, active, ...props }) => {
             }
             setTimeout(() => {
               setIsActive(false);
-            }, 200);
+            }, 700);
           },
         });
       }

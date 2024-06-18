@@ -44,8 +44,6 @@ const DynamicTextContainer = ({ textContainerRef, imagesRefs, scrollRef }) => {
   Scroll Animation trigger
   -------------------*/
 
-        console.log(scrollRef);
-
         if (scrollRef && scrollRef.current) {
           const scrollRefChildren = gsap.utils.toArray(
             scrollRef.current.children
