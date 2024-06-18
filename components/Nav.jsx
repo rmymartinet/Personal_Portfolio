@@ -4,15 +4,16 @@ import { useIsActiveStore } from "@/stateStore/isActive";
 import { useWorkNavigation } from "@/stateStore/useWorkNavigation";
 import gsap from "gsap";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { preloadImage } from "./PreloadImg";
 
-const Nav = ({ imageIndex, intialImageRef, flipContainer }) => {
+const Nav = ({ imageIndex, isAnimationDone }) => {
   const router = useRouter();
   const navRef = useRef();
   const { work } = useWorkNavigation();
   const { isClicked, setIsClicked } = useBackNavigationStore();
   const { isActive } = useIsActiveStore();
+  const [isPreloadDone, setIsPreloadDone] = useState(false);
 
   const handleClickHome = async () => {
     await preloadImage(`/images/${work}.jpg`);
@@ -20,9 +21,20 @@ const Nav = ({ imageIndex, intialImageRef, flipContainer }) => {
   };
 
   const handleClickBack = async () => {
-    await preloadImage(imageIndex.image);
-    setIsClicked(true);
+    try {
+      await preloadImage(imageIndex.image);
+      setIsClicked(true);
+      setIsPreloadDone(true);
+    } catch (error) {
+      console.error("Failed to preload image", error);
+    }
   };
+
+  useEffect(() => {
+    if (isAnimationDone && isClicked && isPreloadDone) {
+      router.push("/works");
+    }
+  }, [isAnimationDone, isClicked, isPreloadDone]);
 
   useEffect(() => {
     gsap.to(navRef.current, {
@@ -43,51 +55,15 @@ const Nav = ({ imageIndex, intialImageRef, flipContainer }) => {
     }
   }, [isActive]);
 
-  useEffect(() => {
-    if (
-      isClicked &&
-      intialImageRef &&
-      intialImageRef.current !== null &&
-      flipContainer &&
-      flipContainer.current !== null
-    ) {
-      const tl = gsap.timeline();
-
-      tl.fromTo(
-        intialImageRef.current,
-        {
-          height: "0%",
-        },
-        {
-          zIndex: 9999,
-          height: "100%",
-          duration: 1,
-          ease: "power2.out",
-        }
-      ).to(flipContainer.current, {
-        x: 0,
-        y: 0,
-        borderRadius: "0%",
-        width: "100%",
-        height: "100%",
-        duration: 0.7,
-        ease: "power2.out",
-        onComplete: () => {
-          router.push("/works");
-        },
-      });
-    }
-  }, [isClicked, intialImageRef, flipContainer]);
-
   return (
     <div
       ref={navRef}
       className="fixed top-0 left-0 p-10 text-2xl uppercase z-50 flex justify-between w-full opacity-0"
     >
-      <div className="cursor-pointer" onClick={() => handleClickHome()}>
+      <div className="cursor-pointer" onClick={handleClickHome}>
         (Home)
       </div>
-      <div className="cursor-pointer" onClick={() => handleClickBack()}>
+      <div className="cursor-pointer" onClick={handleClickBack}>
         (Works)
       </div>
     </div>
