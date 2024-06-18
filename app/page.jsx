@@ -13,6 +13,7 @@ export default function MyApp() {
   const containerRef = useRef(null);
   const fixedContainerRef = useRef(null);
   const blinkingTimeRef = useRef(null);
+  const rightContentRef = useRef(null);
   const [isScrolling, setIsScrolling] = useState(false);
 
   /**
@@ -64,6 +65,14 @@ export default function MyApp() {
     });
   }, []);
 
+  useEffect(() => {
+    isScrolling &&
+      gsap.to(rightContentRef.current, {
+        zIndex: 0,
+        duration: 0,
+      });
+  }, [isScrolling]);
+
   return (
     <main>
       <div onWheel={handleWheel} ref={containerRef}>
@@ -87,7 +96,10 @@ export default function MyApp() {
                 objectFit="cover"
               />
             </div>
-            <div className="px-10 h-full flex flex-col gap-y-10 justify-center ">
+            <div
+              ref={rightContentRef}
+              className="px-10 h-full flex flex-col gap-y-10 justify-center z-50 "
+            >
               <div className="flex">
                 <p className="text-md uppercase w-1/6 flex-0.5 opacity-40">
                   [ About ]
@@ -122,12 +134,12 @@ export default function MyApp() {
                 </p>
                 <div className="flex px-24 gap-10 flex-1 justify-between">
                   <div className="flex gap-10">
-                    <p>GitHub</p>
-                    <p>LinkedIn</p>
-                    <p>Youtube</p>
-                    <p>Instagram</p>
+                    <p className="hover cursor-pointer">GitHub</p>
+                    <p className="hover cursor-pointer">LinkedIn</p>
+                    <p className="hover cursor-pointer">Youtube</p>
+                    <p className="hover cursor-pointer">Instagram</p>
                   </div>
-                  <p>Email</p>
+                  <p className="hover cursor-pointer">Email</p>
                 </div>
               </div>
               <div className="absolute py-5 bottom-0">
