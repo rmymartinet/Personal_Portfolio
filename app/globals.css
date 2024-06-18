@@ -91,3 +91,66 @@
     background: transparent;
   }
 }
+
+.hover {
+  position: relative;
+  width: max-content;
+}
+
+.hover:before,
+.hover:after {
+  content: "";
+  width: 30%;
+  border-bottom: 2px solid black;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  opacity: 1;
+  transform: scale(1, 1);
+  transform-origin: right center 0;
+  transition: left 0.2s ease-in-out, width 0.2s ease-in-out;
+}
+
+.hover:after {
+  opacity: 0;
+  transform: scale(0, 1);
+  transform-origin: left center 0;
+}
+
+.hover:hover:before {
+  width: 100%;
+  left: 0;
+  opacity: 0;
+  transform: scale(1, 1);
+}
+
+.hover:hover:after {
+  width: 100%;
+  left: 0;
+  opacity: 1;
+  transform: scale(1, 1);
+}
+
+.hover:not(:hover):before {
+  animation: slideOut 0.7s forwards;
+}
+
+@keyframes slideOut {
+  0% {
+    left: 0;
+    width: 100%;
+  }
+  80% {
+    left: 100%;
+    width: 0;
+  }
+  85% {
+    left: 0%;
+    width: 0;
+  }
+
+  100% {
+    left: 0;
+    width: 0%;
+  }
+}
