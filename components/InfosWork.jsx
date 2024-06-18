@@ -1,60 +1,26 @@
 import images from "@/app/data/data";
-import { useBackNavigationStore } from "@/stateStore/BackNavigation";
-import { useNavigationStore } from "@/stateStore/Navigation";
 import { useIsActiveStore } from "@/stateStore/isActive";
 import gsap from "gsap";
 import { useEffect, useRef } from "react";
 
 import { detailTextSplitTransition } from "@/lib/Animation";
+import { useBackNavigationStore } from "@/stateStore/BackNavigation";
 
-const InfosWork = ({ setShowImage, slideIndexRef, infosRef, slideIndex }) => {
+const InfosWork = ({ slideIndexRef, infosRef, slideIndex }) => {
   const { isActive } = useIsActiveStore();
-  const { isClicked } = useBackNavigationStore();
-  const { isClickedIndex } = useNavigationStore();
   const image = images[slideIndex];
-  const timeOut = [750, 770, 900];
   const p1 = useRef(null);
   const p2 = useRef(null);
   const p3 = useRef(null);
   const p4 = useRef(null);
+  const { isClicked } = useBackNavigationStore();
 
   /*----------------
   Animations infos
   ------------------ */
-
+  // Animation when isActive is true
   useEffect(() => {
-    let animation;
-
-    if (!isActive) {
-      animation = gsap.fromTo(
-        infosRef.current,
-        {
-          opacity: 0,
-        },
-        {
-          delay: 1,
-          opacity: 1,
-          duration: 1,
-          ease: "power2.out",
-        }
-      );
-      animation = gsap.fromTo(
-        slideIndexRef.current,
-        {
-          opacity: 0,
-        },
-        {
-          delay: 1,
-          opacity: 1,
-          duration: 1,
-          ease: "power2.out",
-        }
-      );
-    } else {
-      if (animation) {
-        animation.kill();
-      }
-
+    if (isActive) {
       gsap.to(infosRef.current, {
         opacity: 0,
         duration: 0,
@@ -64,25 +30,42 @@ const InfosWork = ({ setShowImage, slideIndexRef, infosRef, slideIndex }) => {
         duration: 0,
       });
     }
-    return () => {
-      if (animation) {
-        animation.kill();
-      }
-    };
   }, [isActive]);
 
+  // Animation when isClicked is true
   useEffect(() => {
-    let timeoutId;
-
     if (isClicked) {
-      setShowImage(true);
-      timeoutId = setTimeout(() => {
-        setShowImage(false);
-      }, timeOut[isClickedIndex] || 0);
+      gsap.to(infosRef.current, {
+        opacity: 1,
+        delay: 2,
+        duration: 1,
+        ease: "power2.out",
+      });
+      gsap.to(slideIndexRef.current, {
+        opacity: 1,
+        delay: 2,
+        duration: 1,
+        ease: "power2.out",
+      });
     }
-
-    return () => clearTimeout(timeoutId);
   }, [isClicked]);
+
+  useEffect(() => {
+    if (!isActive && !isClicked) {
+      gsap.to(infosRef.current, {
+        opacity: 1,
+        delay: 1,
+        duration: 1,
+        ease: "power2.out",
+      });
+      gsap.to(slideIndexRef.current, {
+        opacity: 1,
+        delay: 1,
+        duration: 1,
+        ease: "power2.out",
+      });
+    }
+  }, [isActive, isClicked]);
 
   useEffect(() => {
     // Remettre le texte à son état non divisé
@@ -109,7 +92,7 @@ const InfosWork = ({ setShowImage, slideIndexRef, infosRef, slideIndex }) => {
   return (
     <div
       ref={infosRef}
-      className="absolute top-[72.5%] left-1/2 transform -translate-x-1/2 -translate-y-1/2  w-[400px] pl-6 pt-2 pb-2 mt-7 space-y-1"
+      className="absolute top-[72.5%] left-1/2 transform -translate-x-1/2 -translate-y-1/2  w-[400px] pl-6 pt-2 pb-2 mt-7 space-y-1 opacity-0 -z-0"
       style={{ backgroundColor: "#FCFCFC" }}
     >
       <p className="font-semibold">{image.title}</p>
