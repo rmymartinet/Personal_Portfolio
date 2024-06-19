@@ -80,8 +80,6 @@ const Carousel = ({ isRender, slideIndex, setSlideIndex }) => {
 
     progress.current += wheelProgress;
 
-    console.log(progress.current);
-
     if (progress.current > threshold && slideIndex < $items.length - 1) {
       hideSlide(slideIndex);
       showSlide(slideIndex + 1);
