@@ -1,4 +1,5 @@
 import { useBackNavigationStore } from "@/stateStore/BackNavigation";
+import { useHomeNavigationStore } from "@/stateStore/useHomeNavigation";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import Link from "next/link";
@@ -7,6 +8,7 @@ import { useEffect, useRef } from "react";
 const InfosIdWork = ({ image, containerRef }) => {
   const infosContentRef = useRef();
   const { isClicked } = useBackNavigationStore();
+  const { isHomeClicked } = useHomeNavigationStore();
 
   /*-------------------
   Infos Content on page load
@@ -43,13 +45,13 @@ const InfosIdWork = ({ image, containerRef }) => {
   }, []);
 
   useEffect(() => {
-    if (isClicked) {
+    if (isClicked || isHomeClicked) {
       gsap.to(infosContentRef.current, {
         opacity: 0,
         duration: 0,
       });
     }
-  }, [isClicked]);
+  }, [isClicked, isHomeClicked]);
 
   return (
     <div
