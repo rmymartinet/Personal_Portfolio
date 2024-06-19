@@ -71,18 +71,27 @@ const Carousel = ({ isRender, slideIndex, setSlideIndex }) => {
   const handleWheel = (e) => {
     if (activePlane !== null) return;
     if (isAnimating.current) return;
+
     const isVerticalScroll = Math.abs(e.deltaY) > Math.abs(e.deltaX);
     const wheelProgress = isVerticalScroll ? e.deltaY : e.deltaX;
-    progress.current = progress.current += wheelProgress;
 
-    if (progress.current > 0 && slideIndex < $items.length - 1) {
+    // Threshold for determining when to change the slide
+    const threshold = 100; // Adjust this value as needed
+
+    progress.current += wheelProgress;
+
+    console.log(progress.current);
+
+    if (progress.current > threshold && slideIndex < $items.length - 1) {
       hideSlide(slideIndex);
       showSlide(slideIndex + 1);
       isRender && setSlideIndex(slideIndex + 1);
-    } else if (progress.current < 0 && slideIndex > 0) {
+      progress.current = 0; // Reset the progress after changing slides
+    } else if (progress.current < -threshold && slideIndex > 0) {
       hideSlide(slideIndex);
-      isRender && setSlideIndex(slideIndex - 1);
       showSlide(slideIndex - 1);
+      isRender && setSlideIndex(slideIndex - 1);
+      progress.current = 0; // Reset the progress after changing slides
     }
   };
 

@@ -65,6 +65,9 @@ export default function MyApp() {
     });
   }, []);
 
+  /*-------------
+  Z-index
+  -------------- */
   useEffect(() => {
     isScrolling &&
       gsap.to(rightContentRef.current, {
