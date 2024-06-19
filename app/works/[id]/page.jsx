@@ -49,7 +49,7 @@ export default function Work() {
   ----------------------------*/
   useEffect(() => {
     gsap.to(flipContainerRef.current, {
-      x: 350,
+      x: 330,
       y: 200,
       borderRadius: "2%",
       width: "60%",
