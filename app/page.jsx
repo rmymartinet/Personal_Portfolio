@@ -67,18 +67,6 @@ export default function MyApp() {
     });
   }, []);
 
-  // /*-------------
-  // Z-index
-  // -------------- */
-  useEffect(() => {
-    if (isScrolling || isHomeClicked) {
-      gsap.to(rightContentRef.current, {
-        zIndex: 0,
-        duration: 0,
-      });
-    }
-  }, [isScrolling, isHomeClicked]);
-
   return (
     <main>
       <div onWheel={handleWheel} ref={containerRef}>
@@ -102,10 +90,7 @@ export default function MyApp() {
                 objectFit="cover"
               />
             </div>
-            <div
-              ref={rightContentRef}
-              className="px-10 h-full flex flex-col gap-y-10 justify-center z-50"
-            >
+            <div className="px-10 h-full flex flex-col gap-y-10 justify-center">
               <div className="flex">
                 <p className="text-md uppercase w-1/6 flex-0.5 opacity-40">
                   [ About ]
@@ -138,7 +123,10 @@ export default function MyApp() {
                 <p className="w-1/6 text-md uppercase flex-0.5 opacity-40">
                   [ Contact ]
                 </p>
-                <div className="flex px-24 gap-10 flex-1 justify-between">
+                <div
+                  ref={rightContentRef}
+                  className="flex px-24 gap-10 flex-1 justify-between"
+                >
                   <div className="flex gap-10">
                     <p className="hover cursor-pointer">GitHub</p>
                     <p className="hover cursor-pointer">LinkedIn</p>
@@ -163,8 +151,8 @@ export default function MyApp() {
                 </div>
               </div>
             </div>
-            <WhiteDivBottom isScrolling={isScrolling} />
-            <WhiteDivTop />
+            {isScrolling && <WhiteDivBottom />}
+            {isHomeClicked && <WhiteDivTop />}
           </div>
         </div>
       </div>

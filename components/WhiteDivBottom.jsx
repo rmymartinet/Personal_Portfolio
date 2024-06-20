@@ -14,14 +14,14 @@ const WhiteDivBottom = ({ isScrolling }) => {
           className="absolute bottom-0 left-0 w-full h-0 bg-white"
         >
           <Image
-            className="object-cover h-full w-full"
+            className="h-full w-full"
             src="/images/margritt.jpg"
             layout="fill"
             objectFit="cover"
           />
         </div>
       </div>
-      <div ref={lineRef} className="absolute flex w-full h-screen z-20">
+      <div ref={lineRef} className="absolute flex w-full h-screen z-20 ">
         <div className="bg-white absolute bottom-0 left-0 w-1/4  flex-1 shadow-xl"></div>
         <div className="bg-white absolute bottom-0 left-[25%] w-1/4  flex-1 shadow-xl"></div>
         <div className="bg-white absolute bottom-0 left-[50%] w-1/4  flex-1 shadow-xl"></div>
