@@ -16,12 +16,24 @@ const Nav = ({ imageIndex, isAnimationDone, isHomeAnimationDone }) => {
   const { isHomeClicked, setIsHomeClicked } = useHomeNavigationStore();
   const { isActive } = useIsActiveStore();
 
+  /*------------
+  Clique sur le bouton Home
+  ------------*/
+
   const handleClickHome = async () => {
-    try {
-      await preloadImage(`/images/${work}.jpg`);
-      setIsHomeClicked(true);
-    } catch (error) {
-      console.error("Failed to preload image", error);
+    const currentPath = window.location.pathname;
+
+    if (/^\/works\/\d+$/.test(currentPath)) {
+      console.log("works/id");
+      try {
+        await preloadImage(`/images/${work}.jpg`);
+        setIsHomeClicked(true);
+      } catch (error) {
+        console.error("Failed to preload image", error);
+      }
+    } else {
+      router.push("/");
+      console.log("home");
     }
   };
 
@@ -31,7 +43,11 @@ const Nav = ({ imageIndex, isAnimationDone, isHomeAnimationDone }) => {
     }
   }, [isHomeClicked, isHomeAnimationDone]);
 
-  const handleClickBack = async () => {
+  /*------------
+  Clique sur le bouton Works
+  ------------*/
+
+  const handleClickWorks = async () => {
     try {
       await preloadImage(imageIndex.image);
       setIsClicked(true);
@@ -74,7 +90,7 @@ const Nav = ({ imageIndex, isAnimationDone, isHomeAnimationDone }) => {
       <div className="cursor-pointer" onClick={handleClickHome}>
         (Home)
       </div>
-      <div className="cursor-pointer" onClick={handleClickBack}>
+      <div className="cursor-pointer" onClick={handleClickWorks}>
         (Works)
       </div>
     </div>

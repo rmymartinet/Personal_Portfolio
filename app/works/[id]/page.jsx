@@ -29,8 +29,6 @@ export default function Work() {
   const flipContainerRef = useRef();
   const scrollRef = useRef();
   const intialImageRef = useRef();
-  const triggerContainer = useRef();
-  const imageTransitionRef = useRef();
 
   const [isAnimationDone, setIsAnimationDone] = useState(false);
   const [isHomeAnimationDone, setIsHomeAnimationDone] = useState(false);
@@ -190,8 +188,8 @@ export default function Work() {
             ease: "power3.inOut",
           },
           {
-            width: "400px",
-            height: "400px",
+            width: "405px",
+            height: "405px",
             duration: 1,
             ease: "power3.inOut",
             onComplete: () => {
