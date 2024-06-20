@@ -7,6 +7,7 @@ const WhiteDivTop = () => {
   const { work } = useWorkNavigation();
 
   AnimationFromWorkPage(lineRef, fixedImageRef);
+
   return (
     <>
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[405px] h-[405px] z-50">
@@ -22,7 +23,7 @@ const WhiteDivTop = () => {
           />
         </div>
       </div>
-      <div ref={lineRef} className="absolute top-0 left-0 w-full h-screen">
+      <div ref={lineRef} className="absolute top-0 left-0 w-full h-screen z-20">
         <div className="bg-white  absolute left-0 w-1/4  flex-1 shadow-xl"></div>
         <div className="bg-white absolute left-[25%] w-1/4  flex-1 shadow-xl"></div>
         <div className="bg-white absolute left-[50%] w-1/4  flex-1 shadow-xl"></div>

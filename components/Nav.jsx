@@ -9,12 +9,13 @@ import { useEffect, useRef } from "react";
 import { preloadImage } from "./PreloadImg";
 
 const Nav = ({ imageIndex, isAnimationDone, isHomeAnimationDone }) => {
-  const router = useRouter();
-  const navRef = useRef();
   const { work } = useWorkNavigation();
   const { isClicked, setIsClicked } = useBackNavigationStore();
   const { isHomeClicked, setIsHomeClicked } = useHomeNavigationStore();
   const { isActive } = useIsActiveStore();
+
+  const router = useRouter();
+  const navRef = useRef();
 
   /*------------
   Clique sur le bouton Home
@@ -24,7 +25,6 @@ const Nav = ({ imageIndex, isAnimationDone, isHomeAnimationDone }) => {
     const currentPath = window.location.pathname;
 
     if (/^\/works\/\d+$/.test(currentPath)) {
-      console.log("works/id");
       try {
         await preloadImage(`/images/${work}.jpg`);
         setIsHomeClicked(true);
@@ -33,7 +33,7 @@ const Nav = ({ imageIndex, isAnimationDone, isHomeAnimationDone }) => {
       }
     } else {
       router.push("/");
-      console.log("home");
+      setIsHomeClicked(true);
     }
   };
 
@@ -62,6 +62,10 @@ const Nav = ({ imageIndex, isAnimationDone, isHomeAnimationDone }) => {
       router.push("/works");
     }
   }, [isAnimationDone, isClicked]);
+
+  /*------------
+  Animation de la Nav
+  ------------*/
 
   useEffect(() => {
     gsap.to(navRef.current, {

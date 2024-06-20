@@ -2,6 +2,7 @@
 
 import WhiteDivBottom from "@/components/WhiteDivBottom";
 import WhiteDivTop from "@/components/WhiteDivTop";
+import { useHomeNavigationStore } from "@/stateStore/useHomeNavigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
@@ -15,6 +16,7 @@ export default function MyApp() {
   const blinkingTimeRef = useRef(null);
   const rightContentRef = useRef(null);
   const [isScrolling, setIsScrolling] = useState(false);
+  const { isHomeClicked } = useHomeNavigationStore();
 
   /**
    * !TODO Ajouter le fais que l'on ne puisse pas scroller entre les animations
@@ -65,16 +67,17 @@ export default function MyApp() {
     });
   }, []);
 
-  /*-------------
-  Z-index
-  -------------- */
+  // /*-------------
+  // Z-index
+  // -------------- */
   useEffect(() => {
-    isScrolling &&
+    if (isScrolling || isHomeClicked) {
       gsap.to(rightContentRef.current, {
         zIndex: 0,
         duration: 0,
       });
-  }, [isScrolling]);
+    }
+  }, [isScrolling, isHomeClicked]);
 
   return (
     <main>
@@ -101,7 +104,7 @@ export default function MyApp() {
             </div>
             <div
               ref={rightContentRef}
-              className="px-10 h-full flex flex-col gap-y-10 justify-center z-50 "
+              className="px-10 h-full flex flex-col gap-y-10 justify-center z-50"
             >
               <div className="flex">
                 <p className="text-md uppercase w-1/6 flex-0.5 opacity-40">
