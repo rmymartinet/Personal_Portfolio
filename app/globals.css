@@ -154,3 +154,20 @@
     width: 0%;
   }
 }
+
+.linkHover {
+  padding: 0;
+  transition: padding 0.5s ease-out;
+}
+
+.linkHover:hover {
+  padding: 0 1.2rem;
+}
+
+.no-hover {
+  pointer-events: none;
+}
+
+.no-scroll {
+  overflow: hidden;
+}
