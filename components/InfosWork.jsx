@@ -1,10 +1,10 @@
 import images from "@/app/data/data";
-import { useIsActiveStore } from "@/stateStore/isActive";
+import { useIsActiveStore } from "@/store/isActive";
 import gsap from "gsap";
 import { useEffect, useRef } from "react";
 
-import { detailTextSplitTransition } from "@/lib/Animation";
-import { useBackNavigationStore } from "@/stateStore/BackNavigation";
+import { useBackNavigationStore } from "@/store/BackNavigation";
+import { detailTextSplitTransition } from "@/utils/Animation";
 
 const InfosWork = ({ slideIndexRef, infosRef, slideIndex }) => {
   const { isActive } = useIsActiveStore();

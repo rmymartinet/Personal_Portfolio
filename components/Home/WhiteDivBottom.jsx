@@ -1,11 +1,13 @@
-import { AnimationToWorkPage } from "@/lib/Animation";
+import { AnimationToWorkPage } from "@/utils/Animation";
 import Image from "next/image";
 import { useRef } from "react";
+
 const WhiteDivBottom = ({ isScrolling }) => {
   const lineRef = useRef(null);
   const fixedImageRef = useRef(null);
 
   AnimationToWorkPage(lineRef, fixedImageRef, isScrolling);
+
   return (
     <>
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[405px] h-[405px] z-50">

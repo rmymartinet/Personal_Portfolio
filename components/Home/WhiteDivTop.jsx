@@ -1,6 +1,7 @@
-import { AnimationFromWorkPage } from "@/lib/Animation";
-import { useWorkNavigation } from "@/stateStore/useWorkNavigation";
+import { useWorkNavigation } from "@/store/useWorkNavigation";
+import { AnimationFromWorkPage } from "@/utils/Animation";
 import { useRef } from "react";
+
 const WhiteDivTop = () => {
   const lineRef = useRef(null);
   const fixedImageRef = useRef(null);
