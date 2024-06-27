@@ -1,6 +1,7 @@
 const images = [
   {
-    number: "O1",
+    index: 0,
+    number: "01",
     image: "/images/margritt/margritt.jpg",
     img1: "/images/margritt/img1.png",
     img2: "/images/margritt/img2.png",
@@ -23,6 +24,8 @@ const images = [
     client: "Margritt",
   },
   {
+    index: 1,
+    number: "02",
     image: "/images/streamworld.jpg",
     title: "Streamworld",
     subtitle: "subtitle",
@@ -32,6 +35,7 @@ const images = [
     client: "Own project",
   },
   {
+    index: 2,
     image: "/images/netflix.jpg",
     title: "Netflix Clone",
     subtitle: "subtitle",
