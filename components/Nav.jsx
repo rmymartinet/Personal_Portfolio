@@ -1,11 +1,11 @@
 "use client";
-import { useBackNavigationStore } from "@/stateStore/BackNavigation";
-import { useIsActiveStore } from "@/stateStore/isActive";
-import { useHomeNavigationStore } from "@/stateStore/useHomeNavigation";
-import { useWorkNavigation } from "@/stateStore/useWorkNavigation";
+import { useBackNavigationStore } from "@/store/BackNavigation";
+import { useIsActiveStore } from "@/store/isActive";
+import { useHomeNavigationStore } from "@/store/useHomeNavigation";
+import { useWorkNavigation } from "@/store/useWorkNavigation";
 import gsap from "gsap";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { preloadImage } from "./PreloadImg";
 
 const Nav = ({ imageIndex, isAnimationDone, isHomeAnimationDone }) => {
@@ -14,24 +14,27 @@ const Nav = ({ imageIndex, isAnimationDone, isHomeAnimationDone }) => {
   const { isHomeClicked, setIsHomeClicked } = useHomeNavigationStore();
   const { isActive } = useIsActiveStore();
 
+  const [isPreload, setIsPreloadDone] = useState(false);
+
   const router = useRouter();
   const navRef = useRef();
 
   /*------------
   Clique sur le bouton Home
   ------------*/
+  const currentPath = window.location.pathname;
 
   const handleClickHome = async () => {
-    const currentPath = window.location.pathname;
-
     if (/^\/works\/\d+$/.test(currentPath)) {
       try {
         await preloadImage(`/images/${work}.jpg`);
         setIsHomeClicked(true);
+        setIsPreloadDone(true);
       } catch (error) {
         console.error("Failed to preload image", error);
       }
     } else {
+      await preloadImage(`/images/${work}.jpg`);
       router.push("/");
       setIsHomeClicked(true);
     }
@@ -50,18 +53,18 @@ const Nav = ({ imageIndex, isAnimationDone, isHomeAnimationDone }) => {
   const handleClickWorks = async () => {
     try {
       await preloadImage(imageIndex.image);
-      setIsClicked(true);
       setIsPreloadDone(true);
+      setIsClicked(true);
     } catch (error) {
       console.error("Failed to preload image", error);
     }
   };
 
   useEffect(() => {
-    if (isAnimationDone && isClicked) {
+    if (isAnimationDone && isClicked && isPreload) {
       router.push("/works");
     }
-  }, [isAnimationDone, isClicked]);
+  }, [isAnimationDone, isClicked, isPreload]);
 
   /*------------
   Animation de la Nav
@@ -92,10 +95,27 @@ const Nav = ({ imageIndex, isAnimationDone, isHomeAnimationDone }) => {
       className="fixed top-0 left-0 p-10 text-2xl uppercase z-50 flex justify-between w-full opacity-0"
     >
       <div className="cursor-pointer" onClick={handleClickHome}>
-        (Home)
+        <span style={{ color: "initial" }}>
+          <span>(</span>
+          <span className="linkHover">Home</span>
+          <span>)</span>
+        </span>
       </div>
-      <div className="cursor-pointer" onClick={handleClickWorks}>
-        (Works)
+      <div onClick={handleClickWorks}>
+        <span
+          className={
+            currentPath === "/works" ? "cursor-none no-hover" : "cursor-pointer"
+          }
+          style={{
+            textDecoration: currentPath === "/works" ? "line-through" : "none",
+          }}
+        >
+          <span style={{ color: "initial" }}>
+            <span>(</span>
+            <span className="linkHover">Works</span>
+            <span>)</span>
+          </span>
+        </span>
       </div>
     </div>
   );
