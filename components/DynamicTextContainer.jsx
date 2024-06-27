@@ -1,59 +1,66 @@
-import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const DynamicTextContainer = ({ textContainerRef, imagesRefs, scrollRef }) => {
+const DynamicTextContainer = ({
+  textContainerRef,
+  imagesRefs,
+  scrollRef,
+  nextImage,
+  nextWork,
+}) => {
   const divRefs = useRef([]);
+  const jref = useRef();
+  const router = useRouter();
 
   useEffect(() => {
-    divRefs.current = divRefs.current.slice(0, imagesRefs.length);
+    divRefs.current = divRefs.current.slice(0, 8);
   }, [imagesRefs]);
 
   /*---------------
    Animate textContainer and imgContainer 
 ------------------*/
-  useGSAP(
-    () => {
-      const images = imagesRefs
-        .map((ref) => ref.current)
-        .filter((el) => el !== null);
+  useEffect(() => {
+    const images = imagesRefs
+      .map((ref) => ref.current)
+      .filter((el) => el !== null);
 
-      const triggers = divRefs.current.filter((el) => el !== null);
-
-      triggers.forEach((trigger, index) => {
-        gsap.fromTo(
-          images[index],
-          {
-            yPercent: 15,
+    const triggers = divRefs.current.slice(0, 6).filter((el) => el !== null);
+    triggers.forEach((trigger, index) => {
+      gsap.fromTo(
+        images[index],
+        {
+          yPercent: 15,
+        },
+        {
+          yPercent: 0,
+          scrollTrigger: {
+            trigger: trigger,
+            start: "top 105%",
+            end: "+=200%",
+            scrub: 5,
           },
-          {
-            yPercent: 0,
-            scrollTrigger: {
-              trigger: trigger,
-              start: "top 105%",
-              end: "+=200%",
-              scrub: 5,
-            },
-          }
-        );
+        }
+      );
 
-        /*---------------
+      /*---------------
   Scroll Animation trigger
   -------------------*/
 
-        if (scrollRef && scrollRef.current) {
-          const scrollRefChildren = gsap.utils.toArray(
-            scrollRef.current.children
-          );
+      if (scrollRef && scrollRef.current) {
+        const scrollRefChildren = gsap.utils.toArray(
+          scrollRef.current.children
+        );
 
-          const childrenToAnimate = scrollRefChildren.slice(
-            index * 6,
-            index * 6 + 6
-          );
+        const childrenToAnimate = scrollRefChildren.slice(
+          index * 6,
+          index * 6 + 6
+        );
 
+        let ctx = gsap.context(() => {
           gsap.to(childrenToAnimate, {
             stagger: 0.2,
             backgroundColor: "red",
@@ -64,20 +71,47 @@ const DynamicTextContainer = ({ textContainerRef, imagesRefs, scrollRef }) => {
               scrub: 1,
             },
           });
-        }
-      });
-    },
-    { dependencies: [imagesRefs, scrollRef] }
-  );
+        });
+
+        return () => {
+          ctx.revert();
+        };
+      }
+    });
+  }, [imagesRefs, scrollRef]);
+
+  useEffect(() => {
+    const triggers = divRefs.current.slice(5, 6).filter((el) => el !== null);
+    const endTriggers = divRefs.current.slice(7, 8).filter((el) => el !== null);
+
+    gsap.to(jref.current, {
+      height: "100%",
+      duration: 1,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: triggers,
+        start: "top top",
+        endTrigger: endTriggers,
+        end: "bottom bottom",
+        scrub: 1,
+        onLeave: () => {
+          setTimeout(() => {
+            router.push(`/works/${nextWork}`);
+          }, 2000);
+        },
+      },
+    });
+  }, [nextWork, router]);
+
   return (
     <>
       <div className="h-screen"></div>
       <div className="h-screen"></div>
       <div
         ref={textContainerRef}
-        className="absolute right-0 p-20 w-1/2 text-2xl "
+        className="absolute right-0 p-20 w-1/2 text-2xl"
       >
-        {[...Array(5).keys()].map((index) => (
+        {[...Array(9).keys()].map((index) => (
           <div
             ref={(el) => (divRefs.current[index] = el)}
             key={index}
@@ -87,6 +121,16 @@ const DynamicTextContainer = ({ textContainerRef, imagesRefs, scrollRef }) => {
           </div>
         ))}
       </div>
+      <div
+        ref={jref}
+        className="fixed bottom-0 w-full h-0 z-50"
+        style={{
+          backgroundImage: `url(${nextImage.image})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      ></div>
     </>
   );
 };

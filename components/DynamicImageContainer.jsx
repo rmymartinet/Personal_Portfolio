@@ -8,7 +8,7 @@ const DynamicImageContainer = ({
   imgContainerRef,
   imagesArray,
   imagesRefs,
-  firstImage,
+  image,
   intialImageRef,
 }) => {
   const bgColor = [
@@ -18,13 +18,14 @@ const DynamicImageContainer = ({
     "bg-slate-200",
     "bg-neutral-200",
   ];
+
   return (
     <>
       <div
         ref={intialImageRef}
         className="absolute bottom-0 w-full h-0 overflow-hidden"
         style={{
-          backgroundImage: `url(${firstImage})`,
+          backgroundImage: `url(${image.image})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -37,7 +38,7 @@ const DynamicImageContainer = ({
         {imagesArray.map((image, index) => (
           <div
             key={index}
-            className={`absolute bottom-0 w-full h-full flex items-center px-10 overflow-hidden z-50 ${bgColor[index]}`}
+            className={`absolute bottom-0 w-full h-full flex items-center px-10  overflow-hidden z-50 ${bgColor[index]}`}
           >
             <Image
               ref={imagesRefs[index]}
