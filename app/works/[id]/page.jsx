@@ -1,25 +1,31 @@
 "use client";
 
+import images from "@/app/data/data";
 import CustomScrollbar from "@/components/CustomScrollBar";
 import DynamicImageContainer from "@/components/DynamicImageContainer";
 import DynamicTextContainer from "@/components/DynamicTextContainer";
 import InfosIdWork from "@/components/InfosIdWork";
 import Nav from "@/components/Nav";
-import { useBackNavigationStore } from "@/stateStore/BackNavigation";
-import { useNavigationStore } from "@/stateStore/Navigation";
-import { useHomeNavigationStore } from "@/stateStore/useHomeNavigation";
-import { useGSAP } from "@gsap/react";
+import { useBackNavigationStore } from "@/store/BackNavigation";
+import { useHomeNavigationStore } from "@/store/useHomeNavigation";
+import { useParamsId } from "@/store/useParamsId";
 import gsap from "gsap";
 import { Flip } from "gsap/Flip";
 import { Observer } from "gsap/Observer";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef, useState } from "react";
-import images from "../../data/data";
 
 gsap.registerPlugin(ScrollTrigger, Flip, Observer);
 
-export default function Work() {
-  const { isClickedIndex } = useNavigationStore();
+export default function Work({ params }) {
+  const image = images[params.id];
+
+  const { setIsIndex } = useParamsId();
+
+  useEffect(() => {
+    setIsIndex(images[params.id]);
+  }, [images, params.id, setIsIndex]);
+
   const { isClicked } = useBackNavigationStore();
   const { isHomeClicked } = useHomeNavigationStore();
 
@@ -42,34 +48,58 @@ export default function Work() {
     "rgb(245 245 245)",
   ];
 
-  const imagesIndex = images[isClickedIndex];
-  const firstImage = imagesIndex.image;
-  const imagesArray = Object.values(imagesIndex).splice(2, 5);
+  const imagesArray = Object.keys(image)
+    .filter((key) => key.startsWith("img"))
+    .map((imageKey) => images[params.id][imageKey]);
+
   const imagesRefs = imagesArray.map(() => useRef(null));
+  const nextWork = parseInt(params.id) + 1;
+  const nextImage = images[nextWork];
 
   /*------------------------
-  Resize the flip container and animate the infos content 
+  Resize the flip container and animate the infos content
+  ----------------------------*/
+
+  const timeoutId = setTimeout(() => {
+    document.body.classList.remove("no-scroll");
+  }, 2000);
+
+  useEffect(() => {
+    document.body.classList.add("no-scroll");
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
+  /*------------------------
+  Resize the flip container and animate the infos content
   ----------------------------*/
   useEffect(() => {
     if (flipContainerRef.current && containerRef.current) {
-      gsap.set(flipContainerRef.current, {
-        position: "fixed",
-        left: "50%",
-        top: "50%",
-        transform: "translate(-50%, -50%)",
+      let ctx = gsap.context(() => {
+        gsap.set(flipContainerRef.current, {
+          position: "fixed",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+        });
+
+        gsap.to(flipContainerRef.current, {
+          borderRadius: "2%",
+          width: "60%",
+          height: "70%",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1,
+          },
+        });
       });
 
-      gsap.to(flipContainerRef.current, {
-        borderRadius: "2%",
-        width: "60%",
-        height: "70%",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 1,
-        },
-      });
+      return () => {
+        ctx.revert();
+      };
     }
   }, []);
 
@@ -77,7 +107,7 @@ export default function Work() {
   Animate the images and text on scroll
   ----------------*/
 
-  useGSAP(() => {
+  useEffect(() => {
     if (textContainerRef.current && imgContainerRef.current) {
       const details = gsap.utils.toArray(textContainerRef.current.children);
       const photos = gsap.utils.toArray(imgContainerRef.current.children);
@@ -120,7 +150,7 @@ export default function Work() {
         };
       });
     }
-  });
+  }, []);
 
   /*----------------
   Click Back from Work [id] to Works
@@ -166,68 +196,71 @@ export default function Work() {
         imgContainerRef.current.children
       );
 
-      const tl = gsap.timeline();
+      let ctx = gsap.context(() => {
+        const tl = gsap.timeline();
 
-      tl.to(body, {
-        backgroundColor: "white",
-        duration: 0.5,
-        ease: "power3.inOut",
-      })
-        .to(imgContainerChildren, {
-          yPercent: 100,
+        tl.to(body, {
+          backgroundColor: "white",
           duration: 0.5,
           ease: "power3.inOut",
         })
-        .fromTo(
-          flipContainerRef.current,
-          {
-            width: "60%",
-            height: "70%",
-            borderRadius: "0%",
-            duration: 1,
+          .to(imgContainerChildren, {
+            yPercent: 100,
+            duration: 0.5,
             ease: "power3.inOut",
-          },
-          {
-            width: "405px",
-            height: "405px",
-            duration: 1,
-            ease: "power3.inOut",
-            onComplete: () => {
-              setIsHomeAnimationDone(true);
+          })
+          .fromTo(
+            flipContainerRef.current,
+            {
+              width: "60%",
+              height: "70%",
+              borderRadius: "0%",
+              duration: 1,
+              ease: "power3.inOut",
             },
-          }
-        );
+            {
+              width: "405px",
+              height: "405px",
+              duration: 1,
+              ease: "power3.inOut",
+              onComplete: () => {
+                setIsHomeAnimationDone(true);
+              },
+            }
+          );
+      });
+
+      return () => {
+        ctx.kill();
+      };
     }
   }, [isHomeClicked, imgContainerRef]);
 
   return (
     <>
       <Nav
-        imageIndex={imagesIndex}
+        imageIndex={image}
         isAnimationDone={isAnimationDone}
         isHomeAnimationDone={isHomeAnimationDone}
       />
 
-      <div ref={containerRef}>
+      <div className="no-scroll" ref={containerRef}>
         <div
           ref={flipContainerRef}
           className="fixed top-0 w-full h-screen overflow-hidden z-50"
           style={{
-            backgroundImage: `url(${images[isClickedIndex].image})`,
+            backgroundImage: `url(${image.image})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
           }}
         >
-          <InfosIdWork
-            image={images[isClickedIndex]}
-            containerRef={containerRef}
-          />
+          <InfosIdWork image={image} containerRef={containerRef} />
           <DynamicImageContainer
+            image={image}
             imgContainerRef={imgContainerRef}
             imagesRefs={imagesRefs}
             imagesArray={imagesArray}
-            firstImage={firstImage}
             intialImageRef={intialImageRef}
           />
         </div>
@@ -236,6 +269,8 @@ export default function Work() {
           imagesRefs={imagesRefs}
           body={body}
           scrollRef={scrollRef}
+          nextWork={nextWork}
+          nextImage={nextImage}
         />
         <CustomScrollbar scrollRef={scrollRef} />
       </div>

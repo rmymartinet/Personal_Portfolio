@@ -1,45 +1,48 @@
 "use client";
 
-import images from "@/app/data/data";
 import Background from "@/components/Background";
 import InfosWork from "@/components/InfosWork";
 import Nav from "@/components/Nav";
-import { numberSplitAnimation } from "@/lib/Animation";
-import { useBackNavigationStore } from "@/stateStore/BackNavigation";
-import { useNavigationStore } from "@/stateStore/Navigation";
-import { useIsHoverStore } from "@/stateStore/isHover";
-import { useWorkNavigation } from "@/stateStore/useWorkNavigation";
+import Carousel from "@/components/Scene/Carousel";
+import { useBackNavigationStore } from "@/store/BackNavigation";
+import { useNavigationStore } from "@/store/Navigation";
+import { useIsActiveStore } from "@/store/isActive";
+import { useIsHoverStore } from "@/store/isHover";
+import { useParamsId } from "@/store/useParamsId";
+import { useWorkNavigation } from "@/store/useWorkNavigation";
+import { numberSplitAnimation } from "@/utils/Animation";
 import { Canvas } from "@react-three/fiber";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { Suspense, useEffect, useRef, useState } from "react";
-import Carousel from "./_components/Carousel";
 
 gsap.registerPlugin(ScrollTrigger);
 
 /**
  * !TODO : Add animation to number slide in relation with de carousel
- * !TODO Créer des composants pour éviter la répétition de code
  */
 
 export default function Works() {
   const { isClickedIndex } = useNavigationStore();
   const { isClicked } = useBackNavigationStore();
   const { setWork } = useWorkNavigation();
-
+  const { isIndex } = useParamsId();
   const { isHover } = useIsHoverStore();
+  const { isActive } = useIsActiveStore();
+
   const [showImage, setShowImage] = useState(false);
 
   const sceneContainer = useRef();
   const slideIndexRef = useRef();
   const infosRef = useRef();
+  const back1Ref = useRef();
 
   const isClickedIndexIsNull = isClickedIndex === null ? 0 : isClickedIndex;
   const [slideIndex, setSlideIndex] = useState(isClickedIndexIsNull);
   const [isRender, setIsRender] = useState(false);
 
-  const timeOut = [750, 770, 900];
+  const timeOut = [1300, 1300, 1300];
 
   /*-------------
   Overflow Hidden to body for the slide animation
@@ -115,10 +118,40 @@ export default function Works() {
       setShowImage(true);
       timeoutId = setTimeout(() => {
         setShowImage(false);
-      }, timeOut[isClickedIndex]);
+      }, timeOut[isIndex.index]);
     }
 
     return () => clearTimeout(timeoutId);
+  }, [isClicked]);
+
+  /*---------------
+  Display background trick for hide slide animation effect
+  -----------------*/
+
+  useEffect(() => {
+    if (isActive) {
+      gsap.to(back1Ref.current, {
+        opacity: 0,
+        duration: 0,
+      });
+    }
+  }, [isActive]);
+
+  useEffect(() => {
+    if (isClicked === true) {
+      gsap.set(back1Ref.current, {
+        opacity: 0,
+        duration: 0,
+        onComplete: () => {
+          setTimeout(() => {
+            gsap.set(back1Ref.current, {
+              opacity: 1,
+              duration: 0,
+            });
+          }, 3000);
+        },
+      });
+    }
   }, [isClicked]);
 
   return (
@@ -128,8 +161,8 @@ export default function Works() {
       {!isRender && (
         <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[405px] h-[405px]">
           <Image
-            className="w-full h-full object-cover"
-            src="/images/margritt.jpg"
+            className="w-full h-full"
+            src="/images/margritt/margritt.jpg"
             alt=""
             layout="fill"
             objectFit="cover"
@@ -144,10 +177,15 @@ export default function Works() {
       {showImage && (
         <img
           className="absolute w-full h-full object-cover z-50"
-          src={images[isClickedIndex].image}
+          src={isIndex.image}
           alt=""
         />
       )}
+      <div
+        ref={back1Ref}
+        className="fixed top-1/2 transform -translate-y-1/2 w-[20%] h-1/2 z-40  bg-white"
+      ></div>
+
       <div className="w-full h-full">
         <Canvas ref={sceneContainer}>
           <Suspense fallback={null}>
