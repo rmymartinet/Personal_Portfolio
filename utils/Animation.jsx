@@ -195,14 +195,22 @@ export const hoverAnimation = (isHover, infosRef) => () => {
   }
 };
 
-export const activeAnimation = (isActive, blockInvisibleRef) => () => {
-  if (isActive) {
-    gsap.to(blockInvisibleRef.current, {
-      opacity: 0,
-      duration: 0,
-    });
-  }
-};
+/*----------------
+  Used by InfosWork Animation 
+   ------------------ */
+
+export const activeAnimation =
+  (isActive, ...refs) =>
+  () => {
+    if (isActive) {
+      refs.forEach((ref) => {
+        gsap.to(ref.current, {
+          opacity: 0,
+          duration: 0,
+        });
+      });
+    }
+  };
 
 export const clickedAnimation = (isClicked, blockInvisibleRef) => () => {
   if (isClicked === true) {

@@ -4,7 +4,7 @@ import gsap from "gsap";
 import { useEffect, useRef } from "react";
 
 import { useBackNavigationStore } from "@/store/BackNavigation";
-import { detailTextSplitTransition } from "@/utils/Animation";
+import { activeAnimation, detailTextSplitTransition } from "@/utils/Animation";
 import { useGSAP } from "@gsap/react";
 
 const InfosWork = ({ slideIndexRef, infosRef, slideIndex }) => {
@@ -20,21 +20,11 @@ const InfosWork = ({ slideIndexRef, infosRef, slideIndex }) => {
   Animations infos
   ------------------ */
   // Animation when isActive is true
-  useGSAP(
-    () => {
-      if (isActive) {
-        gsap.to(infosRef.current, {
-          opacity: 0,
-          duration: 0,
-        });
-        gsap.to(slideIndexRef.current, {
-          opacity: 0,
-          duration: 0,
-        });
-      }
-    },
-    { dependencies: [isActive], scope: infosRef.current, revertOnUpdate: false }
-  );
+  useGSAP(activeAnimation(isActive, infosRef, slideIndexRef), {
+    dependencies: [isActive],
+    scope: infosRef.current,
+    revertOnUpdate: false,
+  });
 
   // Animation when isClicked is true
   useGSAP(
