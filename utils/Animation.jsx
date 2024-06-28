@@ -174,3 +174,49 @@ export const numberSplitAnimation = (el) => {
     split.revert();
   };
 };
+
+/*----------------
+  Work Page Animation
+  ------------------ */
+
+export const hoverAnimation = (isHover, infosRef) => () => {
+  if (isHover) {
+    gsap.to(infosRef.current, {
+      top: "74.5%",
+      duration: 0.5,
+      ease: "power3.out",
+    });
+  } else {
+    gsap.to(infosRef.current, {
+      top: "72.5%",
+      duration: 0.5,
+      ease: "power3.out",
+    });
+  }
+};
+
+export const activeAnimation = (isActive, blockInvisibleRef) => () => {
+  if (isActive) {
+    gsap.to(blockInvisibleRef.current, {
+      opacity: 0,
+      duration: 0,
+    });
+  }
+};
+
+export const clickedAnimation = (isClicked, blockInvisibleRef) => () => {
+  if (isClicked === true) {
+    gsap.set(blockInvisibleRef.current, {
+      opacity: 0,
+      duration: 0,
+      onComplete: () => {
+        setTimeout(() => {
+          gsap.set(blockInvisibleRef.current, {
+            opacity: 1,
+            duration: 0,
+          });
+        }, 3000);
+      },
+    });
+  }
+};

@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 
 import { useBackNavigationStore } from "@/store/BackNavigation";
 import { detailTextSplitTransition } from "@/utils/Animation";
+import { useGSAP } from "@gsap/react";
 
 const InfosWork = ({ slideIndexRef, infosRef, slideIndex }) => {
   const { isActive } = useIsActiveStore();
@@ -19,53 +20,70 @@ const InfosWork = ({ slideIndexRef, infosRef, slideIndex }) => {
   Animations infos
   ------------------ */
   // Animation when isActive is true
-  useEffect(() => {
-    if (isActive) {
-      gsap.to(infosRef.current, {
-        opacity: 0,
-        duration: 0,
-      });
-      gsap.to(slideIndexRef.current, {
-        opacity: 0,
-        duration: 0,
-      });
-    }
-  }, [isActive]);
+  useGSAP(
+    () => {
+      if (isActive) {
+        gsap.to(infosRef.current, {
+          opacity: 0,
+          duration: 0,
+        });
+        gsap.to(slideIndexRef.current, {
+          opacity: 0,
+          duration: 0,
+        });
+      }
+    },
+    { dependencies: [isActive], scope: infosRef.current, revertOnUpdate: false }
+  );
 
   // Animation when isClicked is true
-  useEffect(() => {
-    if (isClicked) {
-      gsap.to(infosRef.current, {
-        opacity: 1,
-        delay: 2,
-        duration: 1,
-        ease: "power2.out",
-      });
-      gsap.to(slideIndexRef.current, {
-        opacity: 1,
-        delay: 2,
-        duration: 1,
-        ease: "power2.out",
-      });
+  useGSAP(
+    () => {
+      if (isClicked) {
+        gsap.to(infosRef.current, {
+          opacity: 1,
+          delay: 2,
+          duration: 1,
+          ease: "power2.out",
+        });
+        gsap.to(slideIndexRef.current, {
+          opacity: 1,
+          delay: 2,
+          duration: 1,
+          ease: "power2.out",
+        });
+      }
+    },
+    {
+      dependencies: [isClicked],
+      scope: infosRef.current,
+      revertOnUpdate: false,
     }
-  }, [isClicked]);
+  );
 
-  useEffect(() => {
-    if (!isActive && !isClicked) {
-      gsap.to(infosRef.current, {
-        opacity: 1,
-        delay: 1,
-        duration: 1,
-        ease: "power2.out",
-      });
-      gsap.to(slideIndexRef.current, {
-        opacity: 1,
-        delay: 1,
-        duration: 1,
-        ease: "power2.out",
-      });
+  useGSAP(
+    () => {
+      if (!isActive && !isClicked) {
+        gsap.to(infosRef.current, {
+          opacity: 1,
+          delay: 1,
+          duration: 1,
+          ease: "power2.out",
+        });
+        gsap.to(slideIndexRef.current, {
+          opacity: 1,
+          delay: 1,
+          duration: 1,
+          ease: "power2.out",
+        });
+      }
+    },
+    {
+      dependencies: [isActive, isClicked],
+      scope: infosRef.current,
+      revertOnUpdate: false,
     }
-  }, [isActive, isClicked]);
+  );
 
   useEffect(() => {
     // Remettre le texte à son état non divisé

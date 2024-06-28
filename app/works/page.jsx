@@ -10,7 +10,13 @@ import { useIsActiveStore } from "@/store/isActive";
 import { useIsHoverStore } from "@/store/isHover";
 import { useParamsId } from "@/store/useParamsId";
 import { useWorkNavigation } from "@/store/useWorkNavigation";
-import { numberSplitAnimation } from "@/utils/Animation";
+import {
+  activeAnimation,
+  clickedAnimation,
+  hoverAnimation,
+  numberSplitAnimation,
+} from "@/utils/Animation";
+import { useGSAP } from "@gsap/react";
 import { Canvas } from "@react-three/fiber";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -36,7 +42,9 @@ export default function Works() {
   const sceneContainer = useRef();
   const slideIndexRef = useRef();
   const infosRef = useRef();
-  const back1Ref = useRef();
+  const blockInvisibleRef = useRef();
+  const workContainerRef = useRef();
+  const pageWorkContainerRef = useRef();
 
   const isClickedIndexIsNull = isClickedIndex === null ? 0 : isClickedIndex;
   const [slideIndex, setSlideIndex] = useState(isClickedIndexIsNull);
@@ -75,21 +83,11 @@ export default function Works() {
   Animations Hover
   ------------------ */
 
-  useEffect(() => {
-    if (isHover) {
-      gsap.to(infosRef.current, {
-        top: "74.5%",
-        duration: 0.5,
-        ease: "power3.out",
-      });
-    } else {
-      gsap.to(infosRef.current, {
-        top: "72.5%",
-        duration: 0.5,
-        ease: "power3.out",
-      });
-    }
-  }, [isHover]);
+  useGSAP(hoverAnimation(isHover, infosRef), {
+    dependencies: [isHover],
+    scope: workContainerRef.current,
+    revertOnUpdate: false,
+  });
 
   useEffect(() => {
     setWork(slideIndex);
@@ -128,34 +126,23 @@ export default function Works() {
   Display background trick for hide slide animation effect
   -----------------*/
 
-  useEffect(() => {
-    if (isActive) {
-      gsap.to(back1Ref.current, {
-        opacity: 0,
-        duration: 0,
-      });
-    }
-  }, [isActive]);
+  useGSAP(activeAnimation(isActive, blockInvisibleRef), {
+    dependencies: [isActive],
+    scope: pageWorkContainerRef.current,
+    revertOnUpdate: false,
+  });
 
-  useEffect(() => {
-    if (isClicked === true) {
-      gsap.set(back1Ref.current, {
-        opacity: 0,
-        duration: 0,
-        onComplete: () => {
-          setTimeout(() => {
-            gsap.set(back1Ref.current, {
-              opacity: 1,
-              duration: 0,
-            });
-          }, 3000);
-        },
-      });
-    }
-  }, [isClicked]);
+  useGSAP(clickedAnimation(isClicked, blockInvisibleRef), {
+    dependencies: [isClicked],
+    scope: pageWorkContainerRef.current,
+    revertOnUpdate: false,
+  });
 
   return (
-    <section className="relative h-screen w-full overflow-hidden">
+    <section
+      ref={pageWorkContainerRef}
+      className="relative h-screen w-full overflow-hidden"
+    >
       <Nav />
       <Background />
       {!isRender && (
@@ -182,11 +169,11 @@ export default function Works() {
         />
       )}
       <div
-        ref={back1Ref}
+        ref={blockInvisibleRef}
         className="fixed top-1/2 transform -translate-y-1/2 w-[20%] h-1/2 z-40  bg-white"
       ></div>
 
-      <div className="w-full h-full">
+      <div ref={workContainerRef} className="w-full h-full">
         <Canvas ref={sceneContainer}>
           <Suspense fallback={null}>
             <Carousel
