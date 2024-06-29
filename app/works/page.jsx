@@ -1,9 +1,9 @@
 "use client";
 
 import Background from "@/components/Background";
-import InfosWork from "@/components/InfosWork";
-import Nav from "@/components/Nav";
-import Carousel from "@/components/Scene/Carousel";
+import Nav from "@/components/Nav/Nav";
+import Carousel from "@/components/ SceneComponents/Carousel";
+import InfosWork from "@/components/WorksComponents/InfosWork";
 import { useBackNavigationStore } from "@/store/BackNavigation";
 import { useNavigationStore } from "@/store/Navigation";
 import { useIsActiveStore } from "@/store/isActive";

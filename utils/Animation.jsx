@@ -228,3 +228,307 @@ export const clickedAnimation = (isClicked, blockInvisibleRef) => () => {
     });
   }
 };
+
+/*----------------
+  page [id] Animation 
+   ------------------ */
+export const resizeFlipContainer = (flipContainerRef, containerRef) => {
+  if (flipContainerRef.current && containerRef.current) {
+    let ctx = gsap.context(() => {
+      gsap.set(flipContainerRef.current, {
+        position: "fixed",
+        left: "50%",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
+      });
+
+      gsap.to(flipContainerRef.current, {
+        borderRadius: "2%",
+        width: "60%",
+        height: "70%",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1,
+        },
+      });
+    });
+
+    return () => {
+      ctx.revert();
+    };
+  }
+};
+
+export const imagesAndTextScroll = (
+  textContainerRef,
+  imgContainerRef,
+  images,
+  body
+) => {
+  if (textContainerRef.current && imgContainerRef.current) {
+    const bgColor = [
+      "rgb(224 231 255);",
+      "rgb(226 232 240))",
+      "rgb(219 234 254)",
+      "rgb(226 232 240))",
+      "rgb(245 245 245)",
+    ];
+
+    const details = gsap.utils.toArray(textContainerRef.current.children);
+    const photos = gsap.utils.toArray(imgContainerRef.current.children);
+
+    gsap.set(photos, {
+      clipPath: "inset(100% 0% 0% 0%)",
+    });
+
+    let mm = gsap.matchMedia();
+
+    mm.add("(min-width: 600px)", () => {
+      let animations = photos.map((photo, index) => {
+        let animation = gsap
+          .timeline()
+          .to(photo, {
+            clipPath: "inset(0% 0% 0% 0%)",
+            ease: "power2.inOut",
+            duration: 5,
+          })
+          .to(images[index], { yPercent: -10, duration: 5 }, 0)
+          .to(body, { backgroundColor: bgColor[index], duration: 10 }, 0);
+
+        return animation;
+      });
+
+      details.forEach((detail, index) => {
+        let headline = detail.querySelector("h1");
+
+        ScrollTrigger.create({
+          trigger: headline,
+          start: "top 150%",
+          end: "bottom 10%",
+          animation: animations[index],
+          scrub: 1.5,
+        });
+      });
+
+      return () => {
+        console.log("mobile");
+      };
+    });
+  }
+};
+
+export const backFromWork = ({
+  isClicked,
+  imgContainerRef,
+  flipContainerRef,
+  setIsAnimationDone,
+}) => {
+  if (isClicked && imgContainerRef.current && flipContainerRef.current) {
+    const imgContainerChildren = gsap.utils.toArray(
+      imgContainerRef.current.children
+    );
+
+    const tl = gsap.timeline();
+
+    tl.to(imgContainerChildren, {
+      yPercent: 100,
+      stagger: 0.1,
+      duration: 0.5,
+      ease: "power3.inOut",
+    }).to(
+      flipContainerRef.current,
+      {
+        x: 0,
+        y: 0,
+        borderRadius: "0%",
+        width: "100%",
+        height: "100%",
+        duration: 1,
+        ease: "power3.inOut",
+        onComplete: () => {
+          setIsAnimationDone(true);
+        },
+      },
+      "-=0.2"
+    );
+  }
+};
+
+export const backFromWorkIdToHome = ({
+  isHomeClicked,
+  imgContainerRef,
+  flipContainerRef,
+}) => {
+  if (isHomeClicked && imgContainerRef.current && flipContainerRef.current) {
+    const imgContainerChildren = gsap.utils.toArray(
+      imgContainerRef.current.children
+    );
+
+    let ctx = gsap.context(() => {
+      const tl = gsap.timeline();
+
+      tl.to(body, {
+        backgroundColor: "white",
+        duration: 0.5,
+        ease: "power3.inOut",
+      })
+        .to(imgContainerChildren, {
+          yPercent: 100,
+          duration: 0.5,
+          ease: "power3.inOut",
+        })
+        .fromTo(
+          flipContainerRef.current,
+          {
+            width: "60%",
+            height: "70%",
+            borderRadius: "0%",
+            duration: 1,
+            ease: "power3.inOut",
+          },
+          {
+            width: "405px",
+            height: "405px",
+            duration: 1,
+            ease: "power3.inOut",
+            onComplete: () => {
+              setIsHomeAnimationDone(true);
+            },
+          }
+        );
+    });
+
+    return () => {
+      ctx.kill();
+    };
+  }
+};
+
+/*----------------
+  Dynamic Text and Image Animation
+   ------------------ */
+export const dynamicTextAndImg = ({ imagesRefs, divRefs, scrollRef }) => {
+  const images = imagesRefs
+    .map((ref) => ref.current)
+    .filter((el) => el !== null);
+
+  const triggers = divRefs.current.slice(0, 6).filter((el) => el !== null);
+  triggers.forEach((trigger, index) => {
+    gsap.fromTo(
+      images[index],
+      {
+        yPercent: 15,
+      },
+      {
+        yPercent: 0,
+        scrollTrigger: {
+          trigger: trigger,
+          start: "top 105%",
+          end: "+=200%",
+          scrub: 5,
+        },
+      }
+    );
+
+    /*---------------
+Scroll Animation trigger
+-------------------*/
+
+    if (scrollRef && scrollRef.current) {
+      const scrollRefChildren = gsap.utils.toArray(scrollRef.current.children);
+
+      const childrenToAnimate = scrollRefChildren.slice(
+        index * 6,
+        index * 6 + 6
+      );
+
+      let ctx = gsap.context(() => {
+        gsap.to(childrenToAnimate, {
+          stagger: 0.2,
+          backgroundColor: "red",
+          scrollTrigger: {
+            trigger: trigger,
+            start: "top 105%",
+            end: "+=200%",
+            scrub: 1,
+          },
+        });
+      });
+
+      return () => {
+        ctx.revert();
+      };
+    }
+  });
+};
+
+export const nextWorkAnimation = ({ divRefs, jref, nextWork, router }) => {
+  const triggers = divRefs.current.slice(5, 6).filter((el) => el !== null);
+  const endTriggers = divRefs.current.slice(7, 8).filter((el) => el !== null);
+  gsap.to(jref.current, {
+    height: "100%",
+    duration: 1,
+    ease: "power2.out",
+    scrollTrigger: {
+      trigger: triggers,
+      start: "top top",
+      endTrigger: endTriggers,
+      end: "bottom bottom",
+      scrub: 1,
+      onLeave: () => {
+        setTimeout(() => {
+          router.push(`/works/${nextWork}`);
+        }, 2000);
+      },
+    },
+  });
+};
+
+/*----------------
+ InfosWorkId
+   ------------------ */
+
+export const animateOnLoad = (infosContentRef) => {
+  gsap.fromTo(
+    infosContentRef.current,
+    {
+      xPercent: -100,
+    },
+    {
+      xPercent: 0,
+      duration: 2,
+      ease: "power2.out",
+    }
+  );
+};
+
+export const animateOnScroll = (infosContentRef, containerRef) => {
+  gsap.fromTo(
+    infosContentRef.current,
+    { xPercent: 0 },
+    {
+      xPercent: -500,
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1,
+      },
+    }
+  );
+};
+
+export const animateOnNavigationChange = (
+  isClicked,
+  isHomeClicked,
+  infosContentRef
+) => {
+  if (isClicked || isHomeClicked) {
+    gsap.to(infosContentRef.current, {
+      opacity: 0,
+      duration: 0,
+    });
+  }
+};

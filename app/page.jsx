@@ -1,7 +1,7 @@
 "use client";
 
-import WhiteDivBottom from "@/components/Home/WhiteDivBottom";
-import WhiteDivTop from "@/components/Home/WhiteDivTop";
+import WhiteDivBottom from "@/components/HomeComponents/WhiteDivBottom";
+import WhiteDivTop from "@/components/HomeComponents/WhiteDivTop";
 import { useHomeNavigationStore } from "@/store/useHomeNavigation";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
