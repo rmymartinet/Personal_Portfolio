@@ -1,8 +1,13 @@
 import { useBackNavigationStore } from "@/store/BackNavigation";
 import { useHomeNavigationStore } from "@/store/useHomeNavigation";
-import { gsap } from "gsap";
+import {
+  animateOnLoad,
+  animateOnNavigationChange,
+  animateOnScroll,
+} from "@/utils/Animation";
+import { useGSAP } from "@gsap/react";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 const InfosIdWork = ({ image, containerRef }) => {
   const infosContentRef = useRef();
@@ -13,50 +18,14 @@ const InfosIdWork = ({ image, containerRef }) => {
   Infos Content on page load
 --------------------*/
 
-  useEffect(() => {
-    gsap.fromTo(
-      infosContentRef.current,
-      {
-        xPercent: -100,
-      },
-      {
-        xPercent: 0,
-        duration: 2,
-        ease: "power2.out",
-      }
-    );
-  }, []);
+  useGSAP(animateOnLoad(infosContentRef));
 
-  useEffect(() => {
-    let ctx = gsap.context(() => {
-      gsap.fromTo(
-        infosContentRef.current,
-        { xPercent: 0 },
-        {
-          xPercent: -500,
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 1,
-          },
-        }
-      );
-    });
+  useGSAP(animateOnScroll(infosContentRef, containerRef));
 
-    return () => {
-      ctx.revert();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (isClicked || isHomeClicked) {
-      gsap.to(infosContentRef.current, {
-        opacity: 0,
-        duration: 0,
-      });
-    }
-  }, [isClicked, isHomeClicked]);
+  useGSAP(
+    animateOnNavigationChange(isClicked, isHomeClicked, infosContentRef),
+    [isClicked, isHomeClicked, infosContentRef]
+  );
 
   return (
     <div

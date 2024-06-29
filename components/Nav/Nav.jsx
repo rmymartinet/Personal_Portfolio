@@ -4,10 +4,11 @@ import { useBackNavigationStore } from "@/store/BackNavigation";
 import { useIsActiveStore } from "@/store/isActive";
 import { useHomeNavigationStore } from "@/store/useHomeNavigation";
 import { useWorkNavigation } from "@/store/useWorkNavigation";
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { preloadImage } from "./PreloadImg";
+import { preloadImage } from "../PreloadImg";
 
 const Nav = ({ imageIndex, isAnimationDone, isHomeAnimationDone }) => {
   const { work } = useWorkNavigation();
@@ -80,7 +81,7 @@ const Nav = ({ imageIndex, isAnimationDone, isHomeAnimationDone }) => {
     });
   }, []);
 
-  useEffect(() => {
+  useGSAP(() => {
     if (isActive) {
       gsap.to(navRef.current, {
         opacity: 0,

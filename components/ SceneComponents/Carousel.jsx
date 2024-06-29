@@ -3,7 +3,7 @@ import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
-import images from "../../app/data/data";
+import images from "../../data/data";
 import CarouselItem from "./CarouselItems";
 
 /*------------------------------

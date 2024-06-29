@@ -6,7 +6,7 @@ import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useEffect, useMemo, useRef } from "react";
 import { LinearFilter } from "three";
-import images from "../../app/data/data";
+import images from "../../data/data";
 
 const Plane = ({ hover, router, texture, width, height, active, ...props }) => {
   const $mesh = useRef();
