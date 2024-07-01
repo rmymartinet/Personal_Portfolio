@@ -9,6 +9,8 @@ import { useGSAP } from "@gsap/react";
 import Link from "next/link";
 import { useRef } from "react";
 
+gsap.registerPlugin(useGSAP);
+
 const InfosIdWork = ({ image, containerRef }) => {
   const infosContentRef = useRef();
   const { isClicked } = useBackNavigationStore();

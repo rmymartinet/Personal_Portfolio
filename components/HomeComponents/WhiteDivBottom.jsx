@@ -17,7 +17,7 @@ const WhiteDivBottom = ({ isScrolling }) => {
         >
           <Image
             className="h-full w-full"
-            src="/images/margritt.jpg"
+            src="/images/margritt/margritt.jpg"
             layout="fill"
             objectFit="cover"
           />

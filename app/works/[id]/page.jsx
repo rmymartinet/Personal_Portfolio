@@ -22,7 +22,7 @@ import { Observer } from "gsap/Observer";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-gsap.registerPlugin(ScrollTrigger, Flip, Observer);
+gsap.registerPlugin(ScrollTrigger, Flip, Observer, useGSAP);
 
 export default function Work({ params }) {
   const image = images[params.id];

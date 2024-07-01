@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { preloadImage } from "../PreloadImg";
 
+gsap.registerPlugin(useGSAP);
+
 const Nav = ({ imageIndex, isAnimationDone, isHomeAnimationDone }) => {
   const { work } = useWorkNavigation();
   const { isClicked, setIsClicked } = useBackNavigationStore();

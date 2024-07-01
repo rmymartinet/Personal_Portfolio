@@ -6,6 +6,8 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useEffect, useRef } from "react";
 
+gsap.registerPlugin(useGSAP);
+
 const InfosWork = ({ slideIndexRef, infosRef, slideIndex }) => {
   const { isActive } = useIsActiveStore();
   const image = images[slideIndex];

@@ -5,6 +5,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRouter } from "next/navigation";
 import SplitType from "split-type";
 
+gsap.registerPlugin(useGSAP);
+
 export function AnimationToWorkPage(lineRef, fixedImageRef, isScrolling) {
   gsap.registerPlugin(ScrollTrigger);
 

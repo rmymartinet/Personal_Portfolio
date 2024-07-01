@@ -1,8 +1,8 @@
 "use client";
 
+import Carousel from "@/components/ SceneComponents/Carousel";
 import Background from "@/components/Background";
 import Nav from "@/components/Nav/Nav";
-import Carousel from "@/components/ SceneComponents/Carousel";
 import InfosWork from "@/components/WorksComponents/InfosWork";
 import { useBackNavigationStore } from "@/store/BackNavigation";
 import { useNavigationStore } from "@/store/Navigation";
@@ -23,7 +23,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { Suspense, useEffect, useRef, useState } from "react";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 /**
  * !TODO : Add animation to number slide in relation with de carousel
